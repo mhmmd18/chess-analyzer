@@ -1,0 +1,9 @@
+{
+  "name": "chess-master-review",
+  "version": "1.0.0",
+  "description": "Chess Game Review & Offline Bot Playing Platform",
+  "scripts": {
+    "start": "npx serve ."
+  }
+}
+

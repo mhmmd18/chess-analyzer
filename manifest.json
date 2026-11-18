@@ -1,0 +1,16 @@
+{
+  "manifest_version": 3,
+  "name": "Chess Post-Game Analyzer",
+  "version": "1.0.0",
+  "description": "Analisis pasca-pertandingan catur offline menggunakan Stockfish lokal dan notasi PGN.",
+  "permissions": [
+    "storage"
+  ],
+  "action": {
+    "default_popup": "src/popup.html",
+    "default_title": "Chess Analyzer"
+  },
+  "icons": {
+    "128": "assets/icon.svg"
+  }
+}

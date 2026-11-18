@@ -1,0 +1,1250 @@
+:root {
+  --board-size: 480px;
+  --square-size: 60px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+body {
+  width: 780px;
+  min-height: 610px;
+  background-color: #272522;
+  color: #c3c2c1;
+  padding: 14px;
+  font-size: 13px;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #3c3934;
+  margin-bottom: 12px;
+}
+
+header h1 {
+  font-size: 16px;
+  color: #81b64c;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.tab-btn {
+  background: #312e2b;
+  color: #bababa;
+  border: 1px solid #3d3a34;
+  padding: 6px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.tab-btn.active {
+  background: #81b64c;
+  color: #fff;
+  border-color: #81b64c;
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+/* Import Screen */
+.import-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.input-group label {
+  font-weight: 600;
+  color: #e5e5e5;
+}
+
+textarea {
+  background: #1c1b18;
+  color: #e5e5e5;
+  border: 1px solid #444;
+  border-radius: 4px;
+  padding: 8px;
+  font-family: monospace;
+  font-size: 12px;
+  resize: vertical;
+  min-height: 120px;
+}
+
+.api-fetcher {
+  background: #312e2b;
+  padding: 10px;
+  border-radius: 6px;
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+}
+
+.input-row {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+input[type="text"] {
+  background: #1c1b18;
+  color: #e5e5e5;
+  border: 1px solid #444;
+  padding: 6px 8px;
+  border-radius: 4px;
+}
+
+button.primary-btn {
+  background: #81b64c;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+button.primary-btn:hover {
+  background: #95cc5d;
+}
+
+button.secondary-btn {
+  background: #464440;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  padding: 7px 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+button.secondary-btn:hover {
+  background: #55524d;
+}
+
+/* Analyzer Layout */
+.analyzer-container {
+  display: flex;
+  gap: 12px;
+}
+
+.board-wrapper {
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
+}
+
+/* Board Column with Top & Bottom Player Bars (Persis Gambar 1 & 2) */
+.board-column {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.player-profile-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 6px;
+  border-radius: 4px;
+  background: #21201d;
+  min-height: 42px;
+  box-sizing: border-box;
+}
+
+.profile-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.profile-avatar-box {
+  width: 34px;
+  height: 34px;
+  background: #383531;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #484540;
+  overflow: hidden;
+  position: relative;
+}
+
+.profile-avatar-box img {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+}
+
+.profile-info-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.profile-name-row {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 13px;
+  line-height: 1.2;
+}
+
+.profile-title-badge {
+  background: #962d2d;
+  color: #fff;
+  font-size: 9px;
+  font-weight: 800;
+  padding: 1px 4px;
+  border-radius: 2px;
+  letter-spacing: 0.5px;
+}
+
+.profile-username {
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.profile-rating {
+  color: #999;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.profile-flag {
+  font-size: 12px;
+}
+
+/* Baris Bidak yang Dimakan (Captured Pieces) */
+.captured-pieces-row {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  min-height: 16px;
+}
+
+.captured-piece-mini {
+  width: 14px;
+  height: 14px;
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: -2px; /* Slight overlap seperti Chess.com */
+}
+
+.captured-advantage-score {
+  font-size: 11px;
+  font-weight: 800;
+  color: #ddd;
+  margin-left: 5px;
+}
+
+.eval-bar-container {
+  width: 20px;
+  background: #161512;
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.eval-bar-white {
+  background: #ffffff;
+  width: 100%;
+  height: 50%;
+  transition: height 0.4s ease;
+  margin-top: auto;
+}
+
+.eval-bar-score {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-90deg);
+  font-size: 11px;
+  font-weight: bold;
+  color: #888;
+  pointer-events: none;
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(8, var(--square-size));
+  grid-template-rows: repeat(8, var(--square-size));
+  width: var(--board-size);
+  height: var(--board-size);
+  border: 1px solid #3c3934;
+  border-radius: 4px;
+  overflow: hidden;
+  user-select: none;
+  position: relative;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+}
+
+/* SVG Overlay untuk Arah Panah Langkah Catur (Chess.com Move Arrows) */
+.board-arrows-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 15;
+}
+
+.square {
+  width: var(--square-size);
+  height: var(--square-size);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+}
+
+.square.light {
+  background-color: #ebecd0;
+}
+
+.square.dark {
+  background-color: #779556;
+}
+
+/* Coordinate labels (ranks 1-8 & files a-h) matching Chess.com */
+.coord-rank {
+  position: absolute;
+  top: 2px;
+  left: 3px;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  pointer-events: none;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+.coord-file {
+  position: absolute;
+  bottom: 2px;
+  right: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  pointer-events: none;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+.square.light .coord-rank,
+.square.light .coord-file {
+  color: #779556;
+}
+
+.square.dark .coord-rank,
+.square.dark .coord-file {
+  color: #ebecd0;
+}
+
+.square.highlight-from {
+  background-color: #f5f682 !important;
+}
+
+.square.highlight-to {
+  background-color: #b9ca43 !important;
+}
+
+/* Petak Raja Merah saat terkena Skak / Skakmat (Gaya Chess.com) */
+.square.check-square {
+  background: radial-gradient(ellipse at center, #ff0000 0%, #e61414 45%, rgba(169, 0, 0, 0) 89%) !important;
+  animation: pulseCheck 1s infinite alternate;
+}
+
+@keyframes pulseCheck {
+  from { filter: drop-shadow(0 0 2px #ff0000); }
+  to { filter: drop-shadow(0 0 8px #ff2222); }
+}
+
+.square.best-move-hint {
+  outline: 3px solid #20a0df;
+  outline-offset: -3px;
+}
+
+.square.selected-square {
+  background-color: #bbcb43 !important;
+}
+
+/* Titik rekomendasi langkah kosong (Pas persis di tengah) */
+.square.possible-move::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: calc(var(--square-size) * 0.3);
+  height: calc(var(--square-size) * 0.3);
+  background: rgba(0, 0, 0, 0.22);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* Cincin lingkaran target makan bidak (Chess.com capture ring) */
+.square.possible-capture::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: calc(var(--square-size) * 0.86);
+  height: calc(var(--square-size) * 0.86);
+  border: calc(var(--square-size) * 0.08) solid rgba(0, 0, 0, 0.22);
+  border-radius: 50%;
+  box-sizing: border-box;
+  background: transparent;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.piece {
+  width: var(--square-size);
+  height: var(--square-size);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.piece img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* Sidebar / Info */
+.info-sidebar {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.players-info {
+  background: #1e1d1a;
+  padding: 8px 10px;
+  border-radius: 4px;
+  border: 1px solid #333;
+}
+
+.player-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2px 0;
+}
+
+.player-name {
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.player-badge {
+  font-size: 11px;
+  color: #888;
+}
+
+.eval-status-box {
+  background: #1e1d1a;
+  border: 1px solid #333;
+  border-radius: 4px;
+  padding: 8px 10px;
+}
+
+.eval-header {
+  font-size: 11px;
+  text-transform: uppercase;
+  color: #888;
+  margin-bottom: 4px;
+}
+
+.eval-metrics {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.eval-score-text {
+  font-size: 16px;
+  font-weight: bold;
+  color: #fff;
+}
+
+.best-move-display {
+  font-size: 12px;
+  color: #539fe5;
+  font-weight: 600;
+}
+
+.move-list-box {
+  flex: 1;
+  max-height: 200px;
+  overflow-y: auto;
+  background: #1e1d1a;
+  border: 1px solid #333;
+  border-radius: 4px;
+  padding: 6px;
+  display: grid;
+  grid-template-columns: 28px 1fr 1fr;
+  row-gap: 2px;
+  font-size: 13px;
+}
+
+.move-num {
+  color: #666;
+  text-align: right;
+  padding-right: 4px;
+}
+
+.move-item {
+  padding: 2px 4px;
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+.move-item:hover {
+  background: #333;
+}
+
+.move-item.active {
+  background: #81b64c;
+  color: #fff;
+  font-weight: bold;
+}
+
+.nav-controls {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+}
+
+.nav-btn {
+  background: #383531;
+  color: #fff;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+#btn-play-pause {
+  background: #2b6cb0;
+  min-width: 75px;
+  justify-content: center;
+}
+
+#btn-play-pause:hover {
+  background: #3182ce;
+}
+
+.nav-btn:hover {
+  background: #4c4843;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.badge-blunder { background: #fa412d; color: #fff; }
+.badge-mistake { background: #ffa42c; color: #000; }
+.badge-inaccuracy { background: #eed534; color: #000; }
+.badge-good { background: #81b64c; color: #fff; }
+.badge-best { background: #00b4d8; color: #fff; }
+
+/* Coach Review Card (Persis Gambar 2) */
+.coach-review-card {
+  background: #1e1d1a;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 10px;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.coach-avatar-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.coach-avatar {
+  font-size: 32px;
+  background: #2b2824;
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #555;
+}
+
+.coach-bubble {
+  flex: 1;
+  background: #ffffff;
+  color: #1a1917;
+  border-radius: 8px;
+  padding: 10px 12px;
+  position: relative;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+}
+
+.coach-bubble::before {
+  content: '';
+  position: absolute;
+  top: 14px;
+  left: -8px;
+  width: 0;
+  height: 0;
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  border-right: 8px solid #ffffff;
+}
+
+.coach-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.coach-move-badge {
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 12px;
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.coach-eval {
+  font-size: 12px;
+  font-weight: bold;
+  background: #2b2824;
+  color: #fff;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.coach-message-text {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: #222;
+}
+
+.coach-suggest-text {
+  font-size: 11px;
+  color: #007799;
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+.coach-next-btn {
+  width: 100%;
+  background: #81b64c;
+  font-size: 14px;
+  padding: 10px;
+  font-weight: bold;
+  border-radius: 6px;
+  box-shadow: 0 3px 0 #5c8433;
+}
+
+.coach-next-btn:hover {
+  background: #95cc5d;
+}
+
+/* Badge mini di sudut petak papan catur (Gambar 2) */
+.square-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+  pointer-events: none;
+}
+
+.square-badge.badge-brilliant { background: #1baca6; }
+.square-badge.badge-great { background: #5c8bb0; }
+.square-badge.badge-best { background: #81b64c; }
+.square-badge.badge-mistake { background: #e58f2a; }
+.square-badge.badge-missed { background: #db4b4b; }
+.square-badge.badge-blunder { background: #ca3431; }
+
+/* Modal Overlay Kesimpulan Ulasan (Persis Gambar 1) */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.modal-content.review-summary-modal {
+  background: #21201d;
+  width: 380px;
+  border-radius: 10px;
+  padding: 14px 16px;
+  color: #fff;
+  border: 1px solid #3c3934;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+}
+
+.review-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.review-header h2 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.back-btn {
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  color: #aaa;
+}
+
+.graph-container {
+  background: #2b2824;
+  border-radius: 6px;
+  padding: 4px;
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: center;
+}
+
+.summary-players-grid {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.summary-player-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.summary-player-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: #ddd;
+  max-width: 110px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.summary-avatar-box {
+  width: 54px;
+  height: 54px;
+  background: #2c2a26;
+  border-radius: 8px;
+  border: 2px solid #81b64c;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.summary-avatar-box img {
+  width: 44px;
+  height: 44px;
+}
+
+.accuracy-card {
+  font-size: 20px;
+  font-weight: 800;
+  padding: 4px 14px;
+  border-radius: 6px;
+}
+
+.white-acc {
+  background: #ffffff;
+  color: #111;
+}
+
+.black-acc {
+  background: #383531;
+  color: #ffffff;
+}
+
+.summary-center-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Breakdown Table */
+.breakdown-table {
+  background: #272522;
+  border-radius: 6px;
+  padding: 6px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+
+.breakdown-row {
+  display: grid;
+  grid-template-columns: 35px 26px 1fr 35px;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.count-white {
+  text-align: left;
+  font-size: 13px;
+  font-weight: 700;
+  color: #ddd;
+}
+
+.count-black {
+  text-align: right;
+  font-size: 13px;
+  font-weight: 700;
+  color: #ddd;
+}
+
+.breakdown-label {
+  color: #aaa;
+  margin-left: 6px;
+}
+
+.breakdown-badge {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 900;
+  color: #fff;
+}
+
+.badge-icon-brilliant { background: #1baca6; }
+.badge-icon-great { background: #5c8bb0; }
+.badge-icon-best { background: #81b64c; }
+.badge-icon-mistake { background: #e58f2a; }
+.badge-icon-missed { background: #db4b4b; }
+.badge-icon-blunder { background: #ca3431; }
+
+.summary-ratings-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  color: #888;
+  padding: 0 4px;
+}
+
+.rating-badge {
+  background: #383531;
+  color: #fff;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.continue-review-btn {
+  width: 100%;
+  background: #81b64c;
+  font-size: 15px;
+  padding: 10px;
+  border-radius: 6px;
+  box-shadow: 0 3px 0 #5c8433;
+}
+
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-2px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Chess Digital Clock (Gaya Chess.com) */
+.chess-clock {
+  font-family: "Courier New", Courier, monospace, sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+  background: #21201d;
+  color: #888;
+  padding: 3px 8px;
+  border-radius: 4px;
+  border: 1px solid #444;
+  letter-spacing: 0.5px;
+  transition: all 0.2s;
+}
+
+.chess-clock.active {
+  background: #ffffff;
+  color: #1a1917;
+  border-color: #81b64c;
+  box-shadow: 0 0 8px rgba(129, 182, 76, 0.4);
+}
+
+.chess-clock.active.low-time {
+  background: #ca3431 !important;
+  color: #ffffff !important;
+  animation: pulseLowTime 1s infinite;
+}
+
+@keyframes pulseLowTime {
+  0% { opacity: 1; }
+  50% { opacity: 0.7; }
+  100% { opacity: 1; }
+}
+
+/* Time Control Buttons (Persis Foto: Bullet, Blitz, Rapid) */
+.time-control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: #252420;
+  padding: 6px;
+  border-radius: 4px;
+}
+
+.tc-header {
+  font-size: 10px;
+  font-weight: 700;
+  color: #aaa;
+  margin-top: 2px;
+}
+
+.tc-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 4px;
+}
+
+.tc-btn {
+  background: #312e2b;
+  color: #ccc;
+  border: 1px solid #444;
+  border-radius: 4px;
+  padding: 5px 2px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.15s;
+}
+
+.tc-btn:hover {
+  background: #3d3a36;
+  color: #fff;
+}
+
+.tc-btn.active {
+  background: #2b3b1c;
+  border-color: #81b64c;
+  color: #81b64c;
+  font-weight: bold;
+}
+
+/* Modal Game Over (Persis Gambar Chess.com: You Won! / You Lost!) */
+.modal-content.game-over-modal {
+  background: #262421;
+  width: 330px;
+  border-radius: 10px;
+  padding: 12px 18px 18px 18px;
+  color: #fff;
+  border: 1px solid #3c3934;
+  box-shadow: 0 12px 35px rgba(0,0,0,0.7);
+  display: flex;
+  flex-direction: column;
+}
+
+.game-over-header {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.close-x-btn {
+  background: none;
+  border: none;
+  color: #888;
+  font-size: 20px;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.close-x-btn:hover {
+  color: #fff;
+}
+
+.game-over-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.game-over-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: -6px;
+}
+
+.game-over-icon {
+  font-size: 28px;
+}
+
+.game-over-title {
+  font-size: 24px;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.5px;
+}
+
+.game-over-subtitle {
+  font-size: 13px;
+  color: #aaa;
+  margin-top: 2px;
+  font-weight: 500;
+}
+
+/* Rating box with stopwatch */
+.rating-change-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 12px 0 10px 0;
+  position: relative;
+}
+
+.rating-clock-icon {
+  font-size: 32px;
+  margin-bottom: 2px;
+}
+
+.rating-text-group {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.rating-number {
+  font-size: 24px;
+  font-weight: 800;
+  color: #fff;
+}
+
+.rating-diff {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.rating-diff.plus {
+  color: #81b64c;
+}
+
+.rating-diff.minus {
+  color: #ca3431;
+}
+
+.rating-label-under {
+  font-size: 11px;
+  color: #888;
+  font-weight: 600;
+}
+
+/* Coach Row in Game Over */
+.go-coach-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  margin: 10px 0;
+}
+
+.go-coach-avatar {
+  font-size: 30px;
+  background: #333;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #555;
+  flex-shrink: 0;
+}
+
+.go-coach-bubble {
+  flex: 1;
+  background: #ffffff;
+  color: #1a1917;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: left;
+  line-height: 1.3;
+  position: relative;
+}
+
+.go-coach-bubble::before {
+  content: '';
+  position: absolute;
+  top: 14px;
+  left: -6px;
+  width: 0;
+  height: 0;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-right: 6px solid #ffffff;
+}
+
+/* Reaction buttons */
+.go-reaction-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+  width: 100%;
+  margin-bottom: 14px;
+}
+
+.go-reaction-btn {
+  background: #33312c;
+  border: 1px solid #444;
+  border-radius: 6px;
+  padding: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.go-reaction-btn:hover {
+  background: #44413a;
+}
+
+/* Green Game Review Button */
+.go-review-btn {
+  width: 100%;
+  background: #81b64c;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 800;
+  padding: 12px;
+  border-radius: 6px;
+  box-shadow: 0 4px 0 #5c8433;
+  cursor: pointer;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.go-review-btn:hover {
+  background: #95cc5d;
+}
+
+/* Bottom Actions */
+.go-bottom-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  width: 100%;
+}
+
+.go-action-btn {
+  padding: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 6px;
+  background: #383531;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+.go-action-btn:hover {
+  background: #484540;
+}
+
+
