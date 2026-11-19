@@ -1272,7 +1272,7 @@ document.addEventListener('DOMContentLoaded', () => {
     reader.readAsText(file);
   });
 
-  // Fetch last game from Chess.com Public API
+  // Fetch last game from Chess.com Public API (via Vercel Serverless Proxy or Direct Fallback)
   btnFetchGame.addEventListener('click', async () => {
     const username = chessUsernameEl.value.trim().toLowerCase();
     if (!username) {
@@ -1284,35 +1284,60 @@ document.addEventListener('DOMContentLoaded', () => {
     btnFetchGame.disabled = true;
 
     try {
-      const archivesRes = await fetch(`https://api.chess.com/pub/player/${username}/games/archives`);
-      if (!archivesRes.ok) throw new Error('Pengguna tidak ditemukan atau profil privat');
-      
-      const archivesData = await archivesRes.json();
-      if (!archivesData.archives || archivesData.archives.length === 0) {
-        throw new Error('Belum ada riwayat permainan');
+      let pgn = null;
+
+      // Coba lewat Serverless API Vercel terlebih dahulu (Bypass Cloudflare & Header User-Agent untuk HP)
+      try {
+        const proxyRes = await fetch(`/api/last-game?username=${encodeURIComponent(username)}`);
+        if (proxyRes.ok) {
+          const proxyData = await proxyRes.json();
+          if (proxyData && proxyData.pgn) {
+            pgn = proxyData.pgn;
+          }
+        } else if (proxyRes.status === 404) {
+          const errData = await proxyRes.json().catch(() => ({}));
+          throw new Error(errData.error || 'Pengguna atau game tidak ditemukan');
+        }
+      } catch (proxyErr) {
+        // Jika offline lokal atau bukan di Vercel, fallback ke direct call
+        console.warn('Proxy API Vercel tidak tersedia, mencoba koneksi langsung:', proxyErr);
       }
 
-      const lastArchiveUrl = archivesData.archives[archivesData.archives.length - 1];
-      const gamesRes = await fetch(lastArchiveUrl);
-      const gamesData = await gamesRes.json();
+      // Fallback jika belum dapat PGN (misal running di localhost tanpa serverless vercel dev)
+      if (!pgn) {
+        const archivesRes = await fetch(`https://api.chess.com/pub/player/${username}/games/archives`);
+        if (!archivesRes.ok) throw new Error('Pengguna tidak ditemukan atau diblokir oleh Cloudflare Chess.com');
+        
+        const archivesData = await archivesRes.json();
+        if (!archivesData.archives || archivesData.archives.length === 0) {
+          throw new Error('Belum ada riwayat permainan');
+        }
 
-      if (!gamesData.games || gamesData.games.length === 0) {
-        throw new Error('Tidak ada game di arsip terbaru');
+        const lastArchiveUrl = archivesData.archives[archivesData.archives.length - 1];
+        const gamesRes = await fetch(lastArchiveUrl);
+        const gamesData = await gamesRes.json();
+
+        if (!gamesData.games || gamesData.games.length === 0) {
+          throw new Error('Tidak ada game di arsip terbaru');
+        }
+
+        const lastGame = gamesData.games[gamesData.games.length - 1];
+        if (!lastGame.pgn) {
+          throw new Error('PGN tidak ditemukan untuk game ini');
+        }
+        pgn = lastGame.pgn;
       }
 
-      const lastGame = gamesData.games[gamesData.games.length - 1];
-      if (!lastGame.pgn) {
-        throw new Error('PGN tidak ditemukan untuk game ini');
-      }
-
-      pgnInputEl.value = lastGame.pgn;
-      loadPgn(lastGame.pgn);
+      pgnInputEl.value = pgn;
+      loadPgn(pgn);
       
       // Simpan ke localStorage (Web) & chrome.storage (Extension)
       if (typeof localStorage !== 'undefined') {
         localStorage.setItem('lastUsername', username);
       }
-      chrome?.storage?.local?.set({ lastUsername: username });
+      if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
+        chrome.storage.local.set({ lastUsername: username });
+      }
     } catch (err) {
       alert(`Gagal mengambil game: ${err.message}`);
     } finally {
@@ -1327,7 +1352,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (saved) {
       chessUsernameEl.value = saved;
     }
-  } else if (chrome?.storage?.local) {
+  } else if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
     chrome.storage.local.get(['lastUsername'], (res) => {
       if (res && res.lastUsername) {
         chessUsernameEl.value = res.lastUsername;
@@ -1600,20 +1625,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Update Captured Pieces (Anggota yang dimakan)
     updateCapturedPiecesDisplay(playChess, capturedTop, capturedBottom, !isPlayerBlack);
-
-    // Tampilkan Panah Rekomendasi Langkah Terbaik In-Game saat Giliran Pemain
-    if (isGameRunning && !playChess.game_over()) {
-      const turn = playChess.turn();
-      const isPlayerTurn = (mode === 'player_vs_bot_white' && turn === 'w') ||
-                           (mode === 'player_vs_bot_black' && turn === 'b');
-
-      if (isPlayerTurn) {
-        const hintMove = quickFindBestMove(playChess);
-        if (hintMove) {
-          renderMoveArrows(playChessboardEl, isPlayerBlack, null, null, hintMove.from, hintMove.to);
-        }
-      }
-    }
   }
 
   function updatePlayStatus() {
@@ -2172,7 +2183,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (typeof localStorage !== 'undefined') {
       localStorage.setItem('chessPlayerNickname', finalName);
     }
-    if (chrome?.storage?.local) {
+    if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
       chrome.storage.local.set({ chessPlayerNickname: finalName });
     }
 
