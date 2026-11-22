@@ -2615,6 +2615,24 @@ document.addEventListener('DOMContentLoaded', () => {
     btnEditorCancel.addEventListener('click', () => switchTab('play'));
   }
 
+  // Helper Tampilkan Toast Notifikasi
+  function showToastMessage(msg, isError = true) {
+    const toast = document.getElementById('custom-toast');
+    if (toast) {
+      toast.textContent = msg;
+      toast.style.background = isError ? '#c0392b' : '#27ae60';
+      toast.style.display = 'block';
+      toast.style.opacity = '1';
+      clearTimeout(window.__toastTimer);
+      window.__toastTimer = setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => { toast.style.display = 'none'; }, 200);
+      }, 3500);
+    } else {
+      alert(msg);
+    }
+  }
+
   // Validasi posisi Editor Catur (Aturan Baku FIDE):
   // 1. Tepat 1 Raja Putih & 1 Raja Hitam
   // 2. Maksimal 8 Pion per sisi
@@ -2628,7 +2646,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     for (let r = 0; r < 8; r++) {
       for (let f = 0; f < 8; f++) {
-        const p = editorBoard[r][f];
+        const p = editorBoardState[r][f];
         if (!p) continue;
 
         if (p.color === 'w') {
@@ -2637,7 +2655,7 @@ document.addEventListener('DOMContentLoaded', () => {
           if (p.type === 'p') {
             whitePawns++;
             if (r === 0 || r === 7) {
-              return { valid: false, error: 'Pion Putih tidak boleh berada di baris 1 atau 8!' };
+              return { valid: false, error: '⚠️ Pion Putih tidak boleh berada di baris 1 atau 8!' };
             }
           }
         } else {
@@ -2646,28 +2664,28 @@ document.addEventListener('DOMContentLoaded', () => {
           if (p.type === 'p') {
             blackPawns++;
             if (r === 0 || r === 7) {
-              return { valid: false, error: 'Pion Hitam tidak boleh berada di baris 1 atau 8!' };
+              return { valid: false, error: '⚠️ Pion Hitam tidak boleh berada di baris 1 atau 8!' };
             }
           }
         }
       }
     }
 
-    if (whiteKing === 0) return { valid: false, error: 'Posisi tidak valid: Raja Putih belum ada di papan!' };
-    if (blackKing === 0) return { valid: false, error: 'Posisi tidak valid: Raja Hitam belum ada di papan!' };
-    if (whiteKing > 1) return { valid: false, error: `Raja Putih melebihi aturan (ada ${whiteKing}, seharusnya 1)!` };
-    if (blackKing > 1) return { valid: false, error: `Raja Hitam melebihi aturan (ada ${blackKing}, seharusnya 1)!` };
+    if (whiteKing === 0) return { valid: false, error: '⚠️ Posisi tidak valid: Raja Putih belum diletakkan di papan!' };
+    if (blackKing === 0) return { valid: false, error: '⚠️ Posisi tidak valid: Raja Hitam belum diletakkan di papan!' };
+    if (whiteKing > 1) return { valid: false, error: `⚠️ Raja Putih melebihi aturan (ada ${whiteKing}, seharusnya tepat 1)!` };
+    if (blackKing > 1) return { valid: false, error: `⚠️ Raja Hitam melebihi aturan (ada ${blackKing}, seharusnya tepat 1)!` };
 
-    if (whitePawns > 8) return { valid: false, error: `Jumlah Pion Putih melebihi batas (ada ${whitePawns}, maksimal 8)!` };
-    if (blackPawns > 8) return { valid: false, error: `Jumlah Pion Hitam melebihi batas (ada ${blackPawns}, maksimal 8)!` };
+    if (whitePawns > 8) return { valid: false, error: `⚠️ Jumlah Pion Putih melebihi batas (ada ${whitePawns}, maksimal 8)!` };
+    if (blackPawns > 8) return { valid: false, error: `⚠️ Jumlah Pion Hitam melebihi batas (ada ${blackPawns}, maksimal 8)!` };
 
-    if (totalWhite > 16) return { valid: false, error: `Total pasukan Putih melebihi aturan (ada ${totalWhite}, maksimal 16)!` };
-    if (totalBlack > 16) return { valid: false, error: `Total pasukan Hitam melebihi aturan (ada ${totalBlack}, maksimal 16)!` };
+    if (totalWhite > 16) return { valid: false, error: `⚠️ Total pasukan Putih melebihi aturan (ada ${totalWhite}, maksimal 16)!` };
+    if (totalBlack > 16) return { valid: false, error: `⚠️ Total pasukan Hitam melebihi aturan (ada ${totalBlack}, maksimal 16)!` };
 
     const fen = buildEditorFen();
     const testChess = new Chess();
     if (!testChess.load(fen)) {
-      return { valid: false, error: 'Posisi catur tidak valid menurut aturan catur standar FIDE!' };
+      return { valid: false, error: '⚠️ Posisi catur tidak valid menurut aturan catur standar FIDE!' };
     }
 
     // Pastikan raja pihak lawan yang tidak giliran jalan tidak dalam posisi diserang/skak
@@ -2678,7 +2696,7 @@ document.addEventListener('DOMContentLoaded', () => {
     tokens[1] = opponentTurn;
     const oppChess = new Chess();
     if (oppChess.load(tokens.join(' ')) && oppChess.in_check()) {
-      return { valid: false, error: `Posisi tidak sah: Raja ${opponentName} sedang terkena skak padahal giliran pihak lain!` };
+      return { valid: false, error: `⚠️ Posisi tidak sah: Raja ${opponentName} sedang terkena skak padahal giliran pihak lain!` };
     }
 
     return { valid: true, fen };
@@ -2689,7 +2707,7 @@ document.addEventListener('DOMContentLoaded', () => {
     btnEditorFinish.addEventListener('click', () => {
       const validation = validateEditorBoard();
       if (!validation.valid) {
-        alert(validation.error);
+        showToastMessage(validation.error, true);
         return;
       }
       const fen = validation.fen;
