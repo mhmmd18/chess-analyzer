@@ -2481,17 +2481,43 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Tombol Reverse Palet: Balik warna semua bidak di papan
+  // Tombol Reverse Palet: Balik warna dan posisi semua bidak di papan (putar papan 180 derajat & tukar warna)
   if (btnPaletteReverse) {
     btnPaletteReverse.addEventListener('click', () => {
+      // 1. Balik posisi papan (r -> 7-r, c -> 7-c) dan tukar warna bidak ('w' <-> 'b')
+      const newBoard = Array(8).fill(null).map(() => Array(8).fill(null));
       for (let r = 0; r < 8; r++) {
         for (let c = 0; c < 8; c++) {
           const p = editorBoardState[r][c];
           if (p) {
-            p.color = p.color === 'w' ? 'b' : 'w';
+            newBoard[7 - r][7 - c] = {
+              type: p.type,
+              color: p.color === 'w' ? 'b' : 'w'
+            };
           }
         }
       }
+      editorBoardState = newBoard;
+
+      // 2. Tukar juga giliran jalan jika ada
+      if (turnRadioWhite && turnRadioBlack) {
+        if (turnRadioWhite.checked) {
+          turnRadioBlack.checked = true;
+        } else {
+          turnRadioWhite.checked = true;
+        }
+      }
+
+      // 3. Tukar hak rokade (Putih <-> Hitam)
+      if (chkWK && chkBK && chkWQ && chkBQ) {
+        const tempWK = chkWK.checked;
+        const tempWQ = chkWQ.checked;
+        chkWK.checked = chkBK.checked;
+        chkWQ.checked = chkBQ.checked;
+        chkBK.checked = tempWK;
+        chkBQ.checked = tempWQ;
+      }
+
       renderEditorBoard();
     });
   }
