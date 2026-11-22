@@ -2481,29 +2481,15 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Tombol Reverse Palet: Balik posisi papan (pasukan putih pindah ke atas, hitam ke bawah)
+  // Tombol Reverse Palet: Balik sudut pandang papan (POV Putih di atas, Hitam di bawah)
   if (btnPaletteReverse) {
     btnPaletteReverse.addEventListener('click', () => {
-      // Balik posisi baris dan kolom (rotasi 180 derajat)
-      // Pasukan Putih (yang tadinya di bawah) berpindah ke atas
-      // Pasukan Hitam (yang tadinya di atas) berpindah ke bawah
-      const newBoard = Array(8).fill(null).map(() => Array(8).fill(null));
-      for (let r = 0; r < 8; r++) {
-        for (let c = 0; c < 8; c++) {
-          const p = editorBoardState[r][c];
-          if (p) {
-            newBoard[7 - r][7 - c] = {
-              type: p.type,
-              color: p.color
-            };
-          }
-        }
-      }
-      editorBoardState = newBoard;
+      // Toggle orientasi tampilan papan (POV Hitam di bawah / Putih di bawah)
+      isEditorFlipped = !isEditorFlipped;
 
-      // Tukar juga giliran jalan jika ada
+      // Tukar juga radio giliran jalan jika diinginkan pengguna
       if (turnRadioWhite && turnRadioBlack) {
-        if (turnRadioWhite.checked) {
+        if (isEditorFlipped) {
           turnRadioBlack.checked = true;
         } else {
           turnRadioWhite.checked = true;
@@ -2518,6 +2504,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (btnEditorReset) {
     btnEditorReset.addEventListener('click', () => {
       editorBoardState = createStandardBoardArray();
+      isEditorFlipped = false;
       if (turnRadioWhite) turnRadioWhite.checked = true;
       if (chkWK) chkWK.checked = true;
       if (chkWQ) chkWQ.checked = true;
@@ -2729,9 +2716,9 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
       const fen = validation.fen;
-      // Simpan posisi awal untuk Command Board
+      // Simpan posisi awal untuk Command Board & teruskan POV flip
       commandInitialFen = fen;
-      initCommandGame(fen);
+      initCommandGame(fen, isEditorFlipped);
       switchTab('command');
     });
   }
@@ -2765,12 +2752,12 @@ document.addEventListener('DOMContentLoaded', () => {
   let commandAutoTimer = null;
   let commandBestMove = null; // { from, to, san }
 
-  function initCommandGame(fen) {
+  function initCommandGame(fen, startFlipped = false) {
     commandChess = new Chess(fen);
     commandHistory = [];
     commandUndoStack = [];
     commandSelectedSquare = null;
-    isCommandFlipped = false; // POV Anda yang bawah (Putih di bawah secara default)
+    isCommandFlipped = startFlipped; // Sesuaikan dengan orientasi editor (jika di-reverse, Hitam di bawah)
     stopCommandStockfish(); // Pastikan tidak jalan otomatis sendiri saat pertama dibuka
     renderCommandBoard();
     updateCommandEvaluation();
