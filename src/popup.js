@@ -1935,7 +1935,38 @@ document.addEventListener('DOMContentLoaded', () => {
       selectedSquare = null;
     }
 
-    renderPlayBoard();
+    updatePlaySelectionUI();
+  }
+
+  // Update highlight seleksi & dot langkah petak Play Board tanpa menghancurkan elemen DOM (zero flicker)
+  function updatePlaySelectionUI() {
+    if (!playChessboardEl) return;
+    const squares = playChessboardEl.querySelectorAll('.square');
+    
+    let legalMoves = [];
+    if (selectedSquare) {
+      legalMoves = playChess.moves({ square: selectedSquare, verbose: true });
+    }
+
+    squares.forEach(sqEl => {
+      const sqName = sqEl.dataset.square;
+
+      if (selectedSquare === sqName) {
+        sqEl.classList.add('selected-square');
+      } else {
+        sqEl.classList.remove('selected-square');
+      }
+
+      sqEl.classList.remove('possible-move', 'possible-capture');
+      const matchedMove = legalMoves.find(m => m.to === sqName);
+      if (matchedMove) {
+        if (matchedMove.captured) {
+          sqEl.classList.add('possible-capture');
+        } else {
+          sqEl.classList.add('possible-move');
+        }
+      }
+    });
   }
 
   // 8 Level Konfigurasi Bot Catur
@@ -2748,14 +2779,14 @@ document.addEventListener('DOMContentLoaded', () => {
     if (commandSelectedSquare) {
       if (commandSelectedSquare === squareName) {
         commandSelectedSquare = null;
-        renderCommandBoard();
+        updateCommandSelectionUI();
         return;
       }
 
       // Cek apakah pemain ganti memilih bidak lain milik warna yang sama
       if (piece && piece.color === turn) {
         commandSelectedSquare = squareName;
-        renderCommandBoard();
+        updateCommandSelectionUI();
         return;
       }
 
@@ -2782,7 +2813,40 @@ document.addEventListener('DOMContentLoaded', () => {
       commandSelectedSquare = null;
     }
 
-    renderCommandBoard();
+    updateCommandSelectionUI();
+  }
+
+  // Update highlight seleksi & dot langkah tanpa rebuild elemen papan / bidak (zero flicker)
+  function updateCommandSelectionUI() {
+    if (!commandChessboardEl) return;
+    const squares = commandChessboardEl.querySelectorAll('.square');
+    
+    let legalMoves = [];
+    if (commandSelectedSquare) {
+      legalMoves = commandChess.moves({ square: commandSelectedSquare, verbose: true });
+    }
+
+    squares.forEach(sqEl => {
+      const sqName = sqEl.dataset.square;
+      
+      // Update selected square class
+      if (commandSelectedSquare === sqName) {
+        sqEl.classList.add('selected-square');
+      } else {
+        sqEl.classList.remove('selected-square');
+      }
+
+      // Update possible move / capture dots
+      sqEl.classList.remove('possible-move', 'possible-capture');
+      const matchedMove = legalMoves.find(m => m.to === sqName);
+      if (matchedMove) {
+        if (matchedMove.captured) {
+          sqEl.classList.add('possible-capture');
+        } else {
+          sqEl.classList.add('possible-move');
+        }
+      }
+    });
   }
 
   function updateCommandHistoryUI() {
