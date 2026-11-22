@@ -2481,10 +2481,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Tombol Reverse Palet: Balik warna dan posisi semua bidak di papan (putar papan 180 derajat & tukar warna)
+  // Tombol Reverse Palet: Balik posisi papan (pasukan putih pindah ke atas, hitam ke bawah)
   if (btnPaletteReverse) {
     btnPaletteReverse.addEventListener('click', () => {
-      // 1. Balik posisi papan (r -> 7-r, c -> 7-c) dan tukar warna bidak ('w' <-> 'b')
+      // Balik posisi baris dan kolom (rotasi 180 derajat)
+      // Pasukan Putih (yang tadinya di bawah) berpindah ke atas
+      // Pasukan Hitam (yang tadinya di atas) berpindah ke bawah
       const newBoard = Array(8).fill(null).map(() => Array(8).fill(null));
       for (let r = 0; r < 8; r++) {
         for (let c = 0; c < 8; c++) {
@@ -2492,30 +2494,20 @@ document.addEventListener('DOMContentLoaded', () => {
           if (p) {
             newBoard[7 - r][7 - c] = {
               type: p.type,
-              color: p.color === 'w' ? 'b' : 'w'
+              color: p.color
             };
           }
         }
       }
       editorBoardState = newBoard;
 
-      // 2. Tukar juga giliran jalan jika ada
+      // Tukar juga giliran jalan jika ada
       if (turnRadioWhite && turnRadioBlack) {
         if (turnRadioWhite.checked) {
           turnRadioBlack.checked = true;
         } else {
           turnRadioWhite.checked = true;
         }
-      }
-
-      // 3. Tukar hak rokade (Putih <-> Hitam)
-      if (chkWK && chkBK && chkWQ && chkBQ) {
-        const tempWK = chkWK.checked;
-        const tempWQ = chkWQ.checked;
-        chkWK.checked = chkBK.checked;
-        chkWQ.checked = chkBQ.checked;
-        chkBK.checked = tempWK;
-        chkBQ.checked = tempWQ;
       }
 
       renderEditorBoard();
