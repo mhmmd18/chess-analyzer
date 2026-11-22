@@ -29,24 +29,26 @@
       background-color: #161512;
       color: #c3c2c1;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      overflow: hidden; /* No-Scroll di Laptop Desktop agar persis menu lainnya */
+      overflow-x: hidden;
+      overflow-y: auto; /* Izinkan scroll bila konten (seperti Editor) melebihi tinggi layar */
       display: flex;
       flex-direction: column;
     }
 
     .web-container {
       width: 100vw;
-      height: 100vh;
+      min-height: 100vh;
+      height: auto;
       max-width: 100%;
       background-color: #1b1a17;
       border: none;
       border-radius: 0;
       box-shadow: none;
-      padding: 8px 16px;
+      padding: 8px 16px 32px 16px;
       box-sizing: border-box;
       display: flex;
       flex-direction: column;
-      overflow: hidden;
+      overflow: visible;
     }
 
     header {
@@ -523,11 +525,10 @@
       flex-direction: row !important;
       align-items: center !important;
       justify-content: center !important;
-      gap: 24px !important;
+      gap: 20px !important;
       width: 100% !important;
       height: 100% !important;
-      max-height: calc(100vh - 85px) !important;
-      overflow: hidden !important;
+      overflow: visible !important;
     }
 
     .editor-left-board {
@@ -535,18 +536,17 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      height: 100%;
     }
 
     .editor-right-sidebar {
       width: 100%;
-      max-width: 420px;
+      max-width: 440px;
       display: flex;
       flex-direction: column;
-      gap: 8px;
-      max-height: calc(100vh - 100px);
+      gap: 10px;
+      max-height: calc(100vh - 120px);
       overflow-y: auto;
-      padding-right: 4px;
+      padding-right: 6px;
       box-sizing: border-box;
     }
 
@@ -555,9 +555,6 @@
       .editor-analyzer-layout {
         flex-direction: column !important;
         align-items: center !important;
-        max-height: none !important;
-        height: auto !important;
-        overflow: visible !important;
         padding-bottom: 40px !important;
       }
       .editor-right-sidebar {
@@ -592,36 +589,36 @@
       width: 100%;
       max-width: 100%;
       background: #1e1d1a;
-      padding: 8px 12px;
+      padding: 12px 14px;
       border-radius: 8px;
       border: 1px solid #3c3934;
-      gap: 8px;
+      gap: 12px;
       margin-bottom: 0;
       box-sizing: border-box;
       flex-shrink: 0;
-      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
     }
 
     .editor-action-buttons {
       display: flex;
       flex-direction: row;
       justify-content: space-between;
-      gap: 8px;
+      gap: 10px;
       width: 100%;
     }
 
     .editor-ctrl-btn {
       flex: 1;
-      padding: 7px 12px;
-      font-size: 11px;
+      padding: 9px 16px;
+      font-size: 12px;
       font-weight: 800;
-      border-radius: 5px;
+      border-radius: 6px;
       border: none;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 5px;
+      gap: 6px;
       letter-spacing: 0.5px;
       transition: filter 0.15s, transform 0.1s;
     }
@@ -647,10 +644,10 @@
     .editor-rules-panel {
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 12px;
       width: 100%;
       background: #181714;
-      padding: 8px 10px;
+      padding: 12px 14px;
       border-radius: 6px;
       border: 1px solid #2d2b27;
       box-sizing: border-box;
@@ -660,14 +657,14 @@
       display: flex;
       flex-direction: column;
       align-items: flex-start;
-      gap: 4px;
+      gap: 8px;
       width: 100%;
     }
 
     .editor-rule-label {
       color: #81b64c;
       font-weight: 800;
-      font-size: 10px;
+      font-size: 11px;
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
@@ -676,7 +673,7 @@
       display: flex;
       flex-direction: column; /* MENURUN KE BAWAH */
       align-items: flex-start;
-      gap: 4px;
+      gap: 8px;
       width: 100%;
     }
 
@@ -684,53 +681,53 @@
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
       color: #f0f0f0;
       font-weight: 700;
-      font-size: 12px;
+      font-size: 13px;
     }
 
     .turn-radio-label input[type="radio"] {
       accent-color: #3b99fc;
-      width: 14px;
-      height: 14px;
+      width: 16px;
+      height: 16px;
       cursor: pointer;
     }
 
     .castling-teams-container {
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 8px;
       width: 100%;
     }
 
     .castling-group {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
       color: #ccc;
-      font-size: 11px;
+      font-size: 12px;
     }
 
     .castling-team-label {
-      font-size: 11px;
+      font-size: 13px;
       font-weight: 700;
-      min-width: 48px;
+      min-width: 55px;
       color: #bbb;
     }
 
     .castling-group label {
       display: inline-flex;
       align-items: center;
-      gap: 4px;
+      gap: 5px;
       cursor: pointer;
       font-weight: 600;
     }
 
     .castling-group input[type="checkbox"] {
       accent-color: #3b99fc;
-      width: 13px;
-      height: 13px;
+      width: 15px;
+      height: 15px;
       cursor: pointer;
     }
 
@@ -738,32 +735,32 @@
     .editor-palette-container {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
       width: 100%;
       max-width: 100%;
       background: #c59b58; /* Warna kayu emas khas palet Chessis */
-      padding: 6px 8px;
+      padding: 8px 10px;
       border-radius: 8px;
       margin-top: 0;
       box-sizing: border-box;
-      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
     }
 
     .palette-tools {
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 6px;
     }
 
     .palette-tool-btn {
-      width: 38px;
-      height: 32px;
+      width: 44px;
+      height: 38px;
       background: #2a2825;
       color: #fff;
       border: 1px solid #4a4742;
       border-radius: 5px;
       cursor: pointer;
-      font-size: 13px;
+      font-size: 14px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -774,21 +771,21 @@
     .palette-tool-btn.active {
       background: #e74c3c !important;
       border-color: #fff !important;
-      box-shadow: 0 0 6px rgba(231, 76, 60, 0.8);
+      box-shadow: 0 0 8px rgba(231, 76, 60, 0.8);
     }
 
     .palette-pieces-grid {
       display: grid;
       grid-template-columns: repeat(6, 1fr);
       grid-template-rows: repeat(2, 1fr);
-      gap: 4px;
+      gap: 6px;
       flex: 1;
     }
 
     .palette-piece-slot {
-      height: 34px;
+      height: 42px;
       background: rgba(0, 0, 0, 0.12);
-      border-radius: 5px;
+      border-radius: 6px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -798,8 +795,8 @@
     }
 
     .palette-piece-slot img {
-      width: 82%;
-      height: 82%;
+      width: 85%;
+      height: 85%;
       object-fit: contain;
       pointer-events: none;
     }
@@ -812,7 +809,7 @@
     .palette-piece-slot.selected {
       border-color: #0077ff !important;
       background: rgba(0, 119, 255, 0.35) !important;
-      box-shadow: 0 0 6px #0077ff;
+      box-shadow: 0 0 8px #0077ff;
     }
 
     /* FEN Container */
@@ -822,7 +819,7 @@
       margin-top: 0;
       display: flex;
       flex-direction: column;
-      gap: 3px;
+      gap: 4px;
     }
 
     .fen-header-row {
@@ -835,9 +832,9 @@
       background: #2475a8;
       color: #fff;
       border: none;
-      font-size: 10px;
+      font-size: 11px;
       font-weight: 700;
-      padding: 3px 8px;
+      padding: 4px 10px;
       border-radius: 4px;
       cursor: pointer;
       transition: background 0.15s;
@@ -853,14 +850,14 @@
       border: 1px solid #444;
       color: #ddd;
       font-family: monospace;
-      font-size: 11px;
-      padding: 5px 8px;
-      border-radius: 4px;
+      font-size: 12px;
+      padding: 7px 10px;
+      border-radius: 5px;
     }
 
     .editor-bottom-bar {
       display: flex;
-      gap: 8px;
+      gap: 12px;
       width: 100%;
       max-width: 100%;
       margin-top: 0;
@@ -868,8 +865,8 @@
 
     .editor-footer-btn {
       flex: 1;
-      padding: 9px;
-      font-size: 13px;
+      padding: 12px;
+      font-size: 14px;
       font-weight: 800;
       border: none;
       border-radius: 6px;

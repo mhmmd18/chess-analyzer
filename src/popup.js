@@ -2715,9 +2715,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Render Panah Rekomendasi Langkah Terbaik (Stockfish Move Arrows Hijau)
-    if (commandBestMove && commandBestMove.from && commandBestMove.to) {
-      renderMoveArrows(commandChessboardEl, isCommandFlipped, null, null, commandBestMove.from, commandBestMove.to);
-    }
+    updateCommandArrows();
 
     // Update Eval Bar
     const whiteScore = quickEvaluatePosition(commandChess);
@@ -2727,6 +2725,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Update History Strip (contoh: 1. d4 b5 2. e4)
     updateCommandHistoryUI();
+  }
+
+  // Render/Update layer panah rekomendasi saja tanpa merusak/merender ulang petak papan
+  function updateCommandArrows() {
+    if (!commandChessboardEl) return;
+    if (commandBestMove && commandBestMove.from && commandBestMove.to) {
+      renderMoveArrows(commandChessboardEl, isCommandFlipped, null, null, commandBestMove.from, commandBestMove.to);
+    } else {
+      const existingSvg = commandChessboardEl.querySelector('.board-arrows-svg');
+      if (existingSvg) existingSvg.remove();
+    }
   }
 
   function onCommandSquareClick(squareName) {
@@ -2834,7 +2843,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (commandSuggestMoves) {
         commandSuggestMoves.innerHTML = `<strong>${turnLabel}:</strong> Langkah Terbaik 👉 <span style="color:#81b64c; font-weight:800; font-size:14px;">${localBest.san}</span> (${localBest.from} ➔ ${localBest.to})`;
       }
-      renderCommandBoard();
+      updateCommandArrows();
     }
 
     // 2. Haluskan dengan Stockfish Worker Asli di Background jika tersedia
@@ -2859,7 +2868,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (commandSuggestMoves) {
               commandSuggestMoves.innerHTML = `<strong>${turnLabel}:</strong> Rekomendasi Stockfish 👉 <span style="color:#81b64c; font-weight:800; font-size:14px;">${mObj.san}</span> (${from} ➔ ${to})`;
             }
-            renderCommandBoard();
+            updateCommandArrows();
           }
         }
       });
