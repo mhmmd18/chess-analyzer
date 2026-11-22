@@ -520,30 +520,65 @@
     }
 
     /* === STYLES UNTUK EDITOR PAPAN (GAMBAR 2) === */
-    .editor-column {
-      max-width: 520px;
+    .editor-analyzer-layout {
+      display: flex !important;
+      flex-direction: row !important;
+      align-items: center !important;
+      justify-content: center !important;
+      gap: 20px !important;
+      width: 100% !important;
+      height: 100% !important;
+      overflow: visible !important;
+    }
+
+    .editor-left-board {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .editor-right-sidebar {
       width: 100%;
-      height: auto !important;
-      overflow-y: visible !important;
-      padding-top: 10px;
-      padding-bottom: 40px;
+      max-width: 440px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-height: calc(100vh - 120px);
+      overflow-y: auto;
+      padding-right: 6px;
+      box-sizing: border-box;
+    }
+
+    /* Di HP, tata letak otomatis berubah kembali menjadi 1 kolom vertikal */
+    @media (max-width: 900px) {
+      .editor-analyzer-layout {
+        flex-direction: column !important;
+        align-items: center !important;
+        padding-bottom: 40px !important;
+      }
+      .editor-right-sidebar {
+        max-width: 100% !important;
+        max-height: none !important;
+        overflow: visible !important;
+      }
     }
 
     #editor-chessboard {
-      width: var(--editor-board-size) !important;
-      height: var(--editor-board-size) !important;
-      grid-template-columns: repeat(8, calc(var(--editor-board-size) / 8)) !important;
-      grid-template-rows: repeat(8, calc(var(--editor-board-size) / 8)) !important;
+      width: var(--board-size) !important;
+      height: var(--board-size) !important;
+      grid-template-columns: repeat(8, calc(var(--board-size) / 8)) !important;
+      grid-template-rows: repeat(8, calc(var(--board-size) / 8)) !important;
     }
 
     #editor-chessboard .square {
-      width: calc(var(--editor-board-size) / 8) !important;
-      height: calc(var(--editor-board-size) / 8) !important;
+      width: calc(var(--board-size) / 8) !important;
+      height: calc(var(--board-size) / 8) !important;
     }
 
     #editor-chessboard .piece {
-      width: calc(var(--editor-board-size) / 8) !important;
-      height: calc(var(--editor-board-size) / 8) !important;
+      width: calc(var(--board-size) / 8) !important;
+      height: calc(var(--board-size) / 8) !important;
     }
 
     /* Top Controls Bar: Reset, Hapus, Giliran Jalan, Rokade Standar (Bikin menurun/vertikal rapi) */
@@ -552,13 +587,13 @@
       flex-direction: column;
       align-items: stretch;
       width: 100%;
-      max-width: var(--board-size);
+      max-width: 100%;
       background: #1e1d1a;
       padding: 12px 14px;
       border-radius: 8px;
       border: 1px solid #3c3934;
       gap: 12px;
-      margin-bottom: 12px;
+      margin-bottom: 0;
       box-sizing: border-box;
       flex-shrink: 0;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
@@ -702,11 +737,11 @@
       align-items: center;
       gap: 8px;
       width: 100%;
-      max-width: var(--board-size);
+      max-width: 100%;
       background: #c59b58; /* Warna kayu emas khas palet Chessis */
       padding: 8px 10px;
       border-radius: 8px;
-      margin-top: 8px;
+      margin-top: 0;
       box-sizing: border-box;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
     }
@@ -780,8 +815,8 @@
     /* FEN Container */
     .editor-fen-container {
       width: 100%;
-      max-width: var(--board-size);
-      margin-top: 8px;
+      max-width: 100%;
+      margin-top: 0;
       display: flex;
       flex-direction: column;
       gap: 4px;
@@ -824,8 +859,8 @@
       display: flex;
       gap: 12px;
       width: 100%;
-      max-width: var(--board-size);
-      margin-top: 10px;
+      max-width: 100%;
+      margin-top: 0;
     }
 
     .editor-footer-btn {
@@ -1326,12 +1361,23 @@
       </div>
     </div>
 
-    /* TAB EDITOR PAPAN / PINDAI (Gambar 2 Chessis) */
+    /* TAB EDITOR PAPAN / PINDAI (Gambar 2 Chessis: Desktop 2 Kolom Sebelah Kanan Papan) */
     <div class="tab-content" id="tab-content-editor" style="overflow-y: auto; overflow-x: hidden; height: auto; min-height: 100%; -webkit-overflow-scrolling: touch;">
-      <div class="analyzer-container" style="justify-content: center; height: auto; min-height: 100%; overflow: visible; align-items: flex-start; padding: 10px 0 60px 0;">
-        <div class="board-column editor-column">
+      <div class="analyzer-container editor-analyzer-layout">
+        
+        <!-- Kolom Kiri: Papan Catur Editor Besar -->
+        <div class="board-column editor-left-board">
+          <div class="board-wrapper">
+            <div class="board" id="editor-chessboard">
+              <!-- Kotak papan dibuat dinamis -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Kolom Kanan: Semua Config, Panel Aturan, Palet Bidak, FEN & Tombol (Sesuai Layout Desktop Main vs Bot) -->
+        <div class="info-sidebar editor-right-sidebar">
           
-          <!-- Top Controls Bar: Reset, Hapus, Giliran Jalan, Rokade Standar (Bikin menurun/vertikal rapi) -->
+          <!-- Top Controls Bar: Reset, Hapus, Giliran Jalan, Rokade Standar -->
           <div class="editor-top-controls">
             <!-- Baris 1: Tombol Reset & Hapus Semua -->
             <div class="editor-action-buttons">
@@ -1345,7 +1391,7 @@
 
             <!-- Baris 2: Panel Menurun untuk Giliran Jalan & Rokade -->
             <div class="editor-rules-panel">
-              <!-- Giliran Jalan -->
+              <!-- Giliran Jalan Menurun -->
               <div class="editor-turn-row">
                 <span class="editor-rule-label">Giliran Jalan:</span>
                 <div class="turn-options-container">
@@ -1360,7 +1406,7 @@
                 </div>
               </div>
 
-              <!-- Aturan Rokade -->
+              <!-- Aturan Rokade Menurun -->
               <div class="editor-castling-row">
                 <span class="editor-rule-label">Aturan Rokade:</span>
                 <div class="castling-teams-container">
@@ -1376,13 +1422,6 @@
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
-
-          <!-- Papan Catur Editor -->
-          <div class="board-wrapper">
-            <div class="board" id="editor-chessboard">
-              <!-- Kotak papan dibuat dinamis -->
             </div>
           </div>
 
@@ -1433,6 +1472,7 @@
           </div>
 
         </div>
+
       </div>
     </div>
 
