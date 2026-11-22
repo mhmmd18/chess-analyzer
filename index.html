@@ -29,26 +29,24 @@
       background-color: #161512;
       color: #c3c2c1;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      overflow-x: hidden;
-      overflow-y: auto; /* Izinkan scroll bila konten (seperti Editor) melebihi tinggi layar */
+      overflow: hidden; /* No-Scroll di Laptop Desktop agar persis menu lainnya */
       display: flex;
       flex-direction: column;
     }
 
     .web-container {
       width: 100vw;
-      min-height: 100vh;
-      height: auto;
+      height: 100vh;
       max-width: 100%;
       background-color: #1b1a17;
       border: none;
       border-radius: 0;
       box-shadow: none;
-      padding: 8px 16px 32px 16px;
+      padding: 8px 16px;
       box-sizing: border-box;
       display: flex;
       flex-direction: column;
-      overflow: visible;
+      overflow: hidden;
     }
 
     header {
@@ -525,10 +523,11 @@
       flex-direction: row !important;
       align-items: center !important;
       justify-content: center !important;
-      gap: 20px !important;
+      gap: 24px !important;
       width: 100% !important;
       height: 100% !important;
-      overflow: visible !important;
+      max-height: calc(100vh - 85px) !important;
+      overflow: hidden !important;
     }
 
     .editor-left-board {
@@ -536,17 +535,18 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      height: 100%;
     }
 
     .editor-right-sidebar {
       width: 100%;
-      max-width: 440px;
+      max-width: 420px;
       display: flex;
       flex-direction: column;
-      gap: 10px;
-      max-height: calc(100vh - 120px);
+      gap: 8px;
+      max-height: calc(100vh - 100px);
       overflow-y: auto;
-      padding-right: 6px;
+      padding-right: 4px;
       box-sizing: border-box;
     }
 
@@ -555,6 +555,9 @@
       .editor-analyzer-layout {
         flex-direction: column !important;
         align-items: center !important;
+        max-height: none !important;
+        height: auto !important;
+        overflow: visible !important;
         padding-bottom: 40px !important;
       }
       .editor-right-sidebar {
@@ -589,36 +592,36 @@
       width: 100%;
       max-width: 100%;
       background: #1e1d1a;
-      padding: 12px 14px;
+      padding: 8px 12px;
       border-radius: 8px;
       border: 1px solid #3c3934;
-      gap: 12px;
+      gap: 8px;
       margin-bottom: 0;
       box-sizing: border-box;
       flex-shrink: 0;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
     }
 
     .editor-action-buttons {
       display: flex;
       flex-direction: row;
       justify-content: space-between;
-      gap: 10px;
+      gap: 8px;
       width: 100%;
     }
 
     .editor-ctrl-btn {
       flex: 1;
-      padding: 9px 16px;
-      font-size: 12px;
+      padding: 7px 12px;
+      font-size: 11px;
       font-weight: 800;
-      border-radius: 6px;
+      border-radius: 5px;
       border: none;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 6px;
+      gap: 5px;
       letter-spacing: 0.5px;
       transition: filter 0.15s, transform 0.1s;
     }
@@ -644,10 +647,10 @@
     .editor-rules-panel {
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 6px;
       width: 100%;
       background: #181714;
-      padding: 12px 14px;
+      padding: 8px 10px;
       border-radius: 6px;
       border: 1px solid #2d2b27;
       box-sizing: border-box;
@@ -657,14 +660,14 @@
       display: flex;
       flex-direction: column;
       align-items: flex-start;
-      gap: 8px;
+      gap: 4px;
       width: 100%;
     }
 
     .editor-rule-label {
       color: #81b64c;
       font-weight: 800;
-      font-size: 11px;
+      font-size: 10px;
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
@@ -673,7 +676,7 @@
       display: flex;
       flex-direction: column; /* MENURUN KE BAWAH */
       align-items: flex-start;
-      gap: 8px;
+      gap: 4px;
       width: 100%;
     }
 
@@ -681,53 +684,53 @@
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
       color: #f0f0f0;
       font-weight: 700;
-      font-size: 13px;
+      font-size: 12px;
     }
 
     .turn-radio-label input[type="radio"] {
       accent-color: #3b99fc;
-      width: 16px;
-      height: 16px;
+      width: 14px;
+      height: 14px;
       cursor: pointer;
     }
 
     .castling-teams-container {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 4px;
       width: 100%;
     }
 
     .castling-group {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
       color: #ccc;
-      font-size: 12px;
+      font-size: 11px;
     }
 
     .castling-team-label {
-      font-size: 13px;
+      font-size: 11px;
       font-weight: 700;
-      min-width: 55px;
+      min-width: 48px;
       color: #bbb;
     }
 
     .castling-group label {
       display: inline-flex;
       align-items: center;
-      gap: 5px;
+      gap: 4px;
       cursor: pointer;
       font-weight: 600;
     }
 
     .castling-group input[type="checkbox"] {
       accent-color: #3b99fc;
-      width: 15px;
-      height: 15px;
+      width: 13px;
+      height: 13px;
       cursor: pointer;
     }
 
@@ -735,32 +738,32 @@
     .editor-palette-container {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
       width: 100%;
       max-width: 100%;
       background: #c59b58; /* Warna kayu emas khas palet Chessis */
-      padding: 8px 10px;
+      padding: 6px 8px;
       border-radius: 8px;
       margin-top: 0;
       box-sizing: border-box;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
     }
 
     .palette-tools {
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 4px;
     }
 
     .palette-tool-btn {
-      width: 44px;
-      height: 38px;
+      width: 38px;
+      height: 32px;
       background: #2a2825;
       color: #fff;
       border: 1px solid #4a4742;
       border-radius: 5px;
       cursor: pointer;
-      font-size: 14px;
+      font-size: 13px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -771,21 +774,21 @@
     .palette-tool-btn.active {
       background: #e74c3c !important;
       border-color: #fff !important;
-      box-shadow: 0 0 8px rgba(231, 76, 60, 0.8);
+      box-shadow: 0 0 6px rgba(231, 76, 60, 0.8);
     }
 
     .palette-pieces-grid {
       display: grid;
       grid-template-columns: repeat(6, 1fr);
       grid-template-rows: repeat(2, 1fr);
-      gap: 6px;
+      gap: 4px;
       flex: 1;
     }
 
     .palette-piece-slot {
-      height: 42px;
+      height: 34px;
       background: rgba(0, 0, 0, 0.12);
-      border-radius: 6px;
+      border-radius: 5px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -795,8 +798,8 @@
     }
 
     .palette-piece-slot img {
-      width: 85%;
-      height: 85%;
+      width: 82%;
+      height: 82%;
       object-fit: contain;
       pointer-events: none;
     }
@@ -809,7 +812,7 @@
     .palette-piece-slot.selected {
       border-color: #0077ff !important;
       background: rgba(0, 119, 255, 0.35) !important;
-      box-shadow: 0 0 8px #0077ff;
+      box-shadow: 0 0 6px #0077ff;
     }
 
     /* FEN Container */
@@ -819,7 +822,7 @@
       margin-top: 0;
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 3px;
     }
 
     .fen-header-row {
@@ -832,9 +835,9 @@
       background: #2475a8;
       color: #fff;
       border: none;
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 700;
-      padding: 4px 10px;
+      padding: 3px 8px;
       border-radius: 4px;
       cursor: pointer;
       transition: background 0.15s;
@@ -850,14 +853,14 @@
       border: 1px solid #444;
       color: #ddd;
       font-family: monospace;
-      font-size: 12px;
-      padding: 7px 10px;
-      border-radius: 5px;
+      font-size: 11px;
+      padding: 5px 8px;
+      border-radius: 4px;
     }
 
     .editor-bottom-bar {
       display: flex;
-      gap: 12px;
+      gap: 8px;
       width: 100%;
       max-width: 100%;
       margin-top: 0;
@@ -865,8 +868,8 @@
 
     .editor-footer-btn {
       flex: 1;
-      padding: 12px;
-      font-size: 14px;
+      padding: 9px;
+      font-size: 13px;
       font-weight: 800;
       border: none;
       border-radius: 6px;
@@ -1361,7 +1364,6 @@
       </div>
     </div>
 
-    /* TAB EDITOR PAPAN / PINDAI (Gambar 2 Chessis: Desktop 2 Kolom Sebelah Kanan Papan) */
     <div class="tab-content" id="tab-content-editor" style="overflow-y: auto; overflow-x: hidden; height: auto; min-height: 100%; -webkit-overflow-scrolling: touch;">
       <div class="analyzer-container editor-analyzer-layout">
         
@@ -1476,7 +1478,6 @@
       </div>
     </div>
 
-    /* TAB COMMAND BOARD (Gambar 3 - Bot Stockfish POV Bawah, Rekomendasi Langkah Kedua Pihak) */
     <div class="tab-content" id="tab-content-command" style="overflow-y: auto; overflow-x: hidden; height: auto; min-height: 100%; -webkit-overflow-scrolling: touch;">
       <div class="analyzer-container" style="justify-content: center; height: auto; min-height: 100%; overflow: visible; align-items: flex-start; padding: 10px 0 60px 0;">
         <div class="board-column command-column" style="height: auto; overflow: visible; padding-bottom: 24px;">
