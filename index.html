@@ -11,6 +11,7 @@
     :root {
       /* Board responsif desktop: muat 100vh tanpa scroll sama sekali */
       --board-size: min(calc(100vh - 150px), calc(100vw - 420px), 680px);
+      --editor-board-size: min(calc(100vh - 360px), 520px);
       --square-size: calc(var(--board-size) / 8);
     }
 
@@ -524,38 +525,59 @@
       width: 100%;
       height: auto !important;
       overflow-y: visible !important;
-      padding-bottom: 24px;
+      padding-top: 10px;
+      padding-bottom: 40px;
     }
 
-    /* Top Controls Bar: Reset, Hapus, Giliran Jalan, Rokade Standar (Persis Gambar 2 Chessis) */
+    #editor-chessboard {
+      width: var(--editor-board-size) !important;
+      height: var(--editor-board-size) !important;
+      grid-template-columns: repeat(8, calc(var(--editor-board-size) / 8)) !important;
+      grid-template-rows: repeat(8, calc(var(--editor-board-size) / 8)) !important;
+    }
+
+    #editor-chessboard .square {
+      width: calc(var(--editor-board-size) / 8) !important;
+      height: calc(var(--editor-board-size) / 8) !important;
+    }
+
+    #editor-chessboard .piece {
+      width: calc(var(--editor-board-size) / 8) !important;
+      height: calc(var(--editor-board-size) / 8) !important;
+    }
+
+    /* Top Controls Bar: Reset, Hapus, Giliran Jalan, Rokade Standar (Bikin menurun/vertikal rapi) */
     .editor-top-controls {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
+      flex-direction: column;
+      align-items: stretch;
       width: 100%;
       max-width: var(--board-size);
-      background: #211f1c;
-      padding: 10px 14px;
+      background: #1e1d1a;
+      padding: 12px 14px;
       border-radius: 8px;
       border: 1px solid #3c3934;
       gap: 12px;
-      margin-bottom: 8px;
+      margin-bottom: 12px;
       box-sizing: border-box;
       flex-shrink: 0;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
     }
 
     .editor-action-buttons {
       display: flex;
-      flex-direction: column;
-      gap: 6px;
+      flex-direction: row;
+      justify-content: space-between;
+      gap: 10px;
+      width: 100%;
     }
 
     .editor-ctrl-btn {
-      padding: 7px 14px;
-      font-size: 11px;
+      flex: 1;
+      padding: 9px 16px;
+      font-size: 12px;
       font-weight: 800;
-      border-radius: 5px;
+      border-radius: 6px;
       border: none;
       cursor: pointer;
       display: flex;
@@ -583,63 +605,91 @@
       color: #fff;
     }
 
+    /* Section Menurun untuk Aturan Giliran & Rokade */
     .editor-rules-panel {
       display: flex;
       flex-direction: column;
-      gap: 6px;
-      font-size: 12px;
-      flex: 1;
+      gap: 10px;
+      width: 100%;
+      background: #181714;
+      padding: 10px 12px;
+      border-radius: 6px;
+      border: 1px solid #2d2b27;
+      box-sizing: border-box;
     }
 
     .editor-turn-row, .editor-castling-row {
       display: flex;
-      align-items: center;
-      gap: 10px;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 6px;
+      width: 100%;
     }
 
     .editor-rule-label {
-      color: #999;
-      font-weight: 700;
+      color: #81b64c;
+      font-weight: 800;
       font-size: 11px;
-      min-width: 75px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .turn-options-container {
+      display: flex;
+      align-items: center;
+      gap: 16px;
     }
 
     .turn-radio-label {
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 4px;
-      color: #ddd;
-      font-weight: 600;
-      font-size: 12px;
+      gap: 6px;
+      color: #e0e0e0;
+      font-weight: 700;
+      font-size: 13px;
     }
 
     .turn-radio-label input[type="radio"] {
       accent-color: #3b99fc;
-      width: 14px;
-      height: 14px;
+      width: 16px;
+      height: 16px;
       cursor: pointer;
+    }
+
+    .castling-teams-container {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      width: 100%;
     }
 
     .castling-group {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
+      gap: 12px;
       color: #ccc;
       font-size: 12px;
+    }
+
+    .castling-team-label {
+      font-size: 13px;
+      font-weight: 700;
+      min-width: 65px;
     }
 
     .castling-group label {
       display: inline-flex;
       align-items: center;
-      gap: 3px;
+      gap: 5px;
       cursor: pointer;
+      font-weight: 600;
     }
 
     .castling-group input[type="checkbox"] {
       accent-color: #3b99fc;
-      width: 14px;
-      height: 14px;
+      width: 15px;
+      height: 15px;
       cursor: pointer;
     }
 
@@ -1278,42 +1328,49 @@
       <div class="analyzer-container" style="justify-content: center; height: auto; min-height: 100%; overflow: visible;">
         <div class="board-column editor-column">
           
-          <!-- Top Controls Bar: Reset, Hapus, Giliran Jalan, Rokade Standar -->
+          <!-- Top Controls Bar: Reset, Hapus, Giliran Jalan, Rokade Standar (Bikin menurun/vertikal rapi) -->
           <div class="editor-top-controls">
+            <!-- Baris 1: Tombol Reset & Hapus Semua -->
             <div class="editor-action-buttons">
               <button id="btn-editor-reset" class="editor-ctrl-btn reset-btn" title="Atur Ulang Posisi Standar">
                 🔄 RESET
               </button>
               <button id="btn-editor-trash-all" class="editor-ctrl-btn trash-btn" title="Hapus Semua Bidak (Kosongkan Papan)">
-                🗑️ HAPUS
+                🗑️ HAPUS SEMUA
               </button>
             </div>
 
-            <!-- Giliran Jalan & Rokade -->
+            <!-- Baris 2: Panel Menurun untuk Giliran Jalan & Rokade -->
             <div class="editor-rules-panel">
+              <!-- Giliran Jalan -->
               <div class="editor-turn-row">
-                <span class="editor-rule-label">Giliran Jalan</span>
-                <label class="turn-radio-label">
-                  <input type="radio" name="editor-turn" value="w" id="editor-turn-white" checked>
-                  <span class="turn-indicator turn-white">⚪ Putih</span>
-                </label>
-                <label class="turn-radio-label">
-                  <input type="radio" name="editor-turn" value="b" id="editor-turn-black">
-                  <span class="turn-indicator turn-black">⚫ Hitam</span>
-                </label>
+                <span class="editor-rule-label">Giliran Jalan:</span>
+                <div class="turn-options-container">
+                  <label class="turn-radio-label">
+                    <input type="radio" name="editor-turn" value="w" id="editor-turn-white" checked>
+                    <span>⚪ Putih</span>
+                  </label>
+                  <label class="turn-radio-label">
+                    <input type="radio" name="editor-turn" value="b" id="editor-turn-black">
+                    <span>⚫ Hitam</span>
+                  </label>
+                </div>
               </div>
 
+              <!-- Aturan Rokade -->
               <div class="editor-castling-row">
-                <span class="editor-rule-label">Rokade</span>
-                <div class="castling-group">
-                  <span class="castling-team-label">⚪</span>
-                  <label><input type="checkbox" id="castling-wk" checked> O-O</label>
-                  <label><input type="checkbox" id="castling-wq" checked> O-O-O</label>
-                </div>
-                <div class="castling-group">
-                  <span class="castling-team-label">⚫</span>
-                  <label><input type="checkbox" id="castling-bk" checked> O-O</label>
-                  <label><input type="checkbox" id="castling-bq" checked> O-O-O</label>
+                <span class="editor-rule-label">Aturan Rokade:</span>
+                <div class="castling-teams-container">
+                  <div class="castling-group">
+                    <span class="castling-team-label">⚪ Putih:</span>
+                    <label><input type="checkbox" id="castling-wk" checked> O-O (Pendek)</label>
+                    <label><input type="checkbox" id="castling-wq" checked> O-O-O (Panjang)</label>
+                  </div>
+                  <div class="castling-group">
+                    <span class="castling-team-label">⚫ Hitam:</span>
+                    <label><input type="checkbox" id="castling-bk" checked> O-O (Pendek)</label>
+                    <label><input type="checkbox" id="castling-bq" checked> O-O-O (Panjang)</label>
+                  </div>
                 </div>
               </div>
             </div>
