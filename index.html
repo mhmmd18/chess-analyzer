@@ -266,7 +266,7 @@
       .tabs {
         width: 100%;
         display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
         gap: 4px;
       }
 
@@ -339,20 +339,607 @@
       .game-over-modal {
         max-width: 360px !important;
       }
+
+      /* Mobile styles for Editor & Command */
+      .editor-top-controls {
+        flex-direction: column !important;
+        align-items: stretch !important;
+      }
+
+      .editor-action-buttons {
+        justify-content: center !important;
+      }
+
+      .editor-rules-panel {
+        justify-content: center !important;
+      }
+
+      .palette-pieces-grid {
+        gap: 2px !important;
+      }
+
+      .palette-piece-slot {
+        width: 34px !important;
+        height: 34px !important;
+      }
+    }
+
+    /* === STYLES UNTUK SIDEBAR DRAWER (GAMBAR 1 CHESSIS) === */
+    .menu-hamburger-btn {
+      background: #272522;
+      border: 1px solid #444;
+      color: #fff;
+      font-size: 16px;
+      padding: 6px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .menu-hamburger-btn:hover {
+      background: #363431;
+    }
+
+    .sidebar-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.75);
+      z-index: 9999;
+      display: flex;
+    }
+
+    .sidebar-drawer {
+      width: 290px;
+      max-width: 85vw;
+      height: 100%;
+      background: #1c1a17;
+      border-right: 1px solid #333;
+      display: flex;
+      flex-direction: column;
+      padding: 20px 16px;
+      box-sizing: border-box;
+      box-shadow: 10px 0 25px rgba(0,0,0,0.7);
+      animation: slideInLeft 0.25s ease-out;
+    }
+
+    @keyframes slideInLeft {
+      from { transform: translateX(-100%); }
+      to { transform: translateX(0); }
+    }
+
+    .sidebar-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      padding-bottom: 16px;
+      border-bottom: 1px solid #2e2b27;
+      margin-bottom: 12px;
+    }
+
+    .sidebar-app-icon {
+      width: 54px;
+      height: 54px;
+      background: #d93829;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      color: #fff;
+      margin-bottom: 8px;
+      box-shadow: 0 4px 10px rgba(217, 56, 41, 0.4);
+    }
+
+    .sidebar-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+
+    .sidebar-engine-pill {
+      font-size: 11px;
+      font-weight: 700;
+      color: #e67e22;
+      background: rgba(230, 126, 34, 0.15);
+      padding: 2px 8px;
+      border-radius: 12px;
+    }
+
+    .sidebar-close-btn {
+      position: absolute;
+      top: 0;
+      right: 0;
+      background: transparent;
+      border: none;
+      color: #888;
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    .sidebar-menu-list {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      overflow-y: auto;
+    }
+
+    .sidebar-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 12px;
+      background: transparent;
+      border: none;
+      border-radius: 8px;
+      color: #d1d0ce;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: left;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .sidebar-item:hover {
+      background: #2a2824;
+      color: #fff;
+    }
+
+    .sidebar-item.secret-menu {
+      background: rgba(129, 182, 76, 0.12);
+      border: 1px dashed #81b64c;
+      color: #a3e660;
+    }
+
+    .sidebar-badge-vip {
+      margin-left: auto;
+      font-size: 9px;
+      background: #81b64c;
+      color: #111;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 900;
+    }
+
+    .sidebar-item.highlight-pro {
+      color: #f39c12;
+    }
+
+    .sidebar-divider {
+      height: 1px;
+      background: #2b2926;
+      margin: 8px 0;
+    }
+
+    /* === STYLES UNTUK EDITOR PAPAN (GAMBAR 2) === */
+    .editor-column {
+      max-width: 520px;
+      width: 100%;
+      height: auto !important;
+      overflow-y: visible !important;
+      padding-bottom: 24px;
+    }
+
+    .editor-top-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      max-width: var(--board-size);
+      background: #22201d;
+      padding: 8px 10px;
+      border-radius: 6px;
+      border: 1px solid #3c3934;
+      gap: 8px;
+      margin-bottom: 8px;
+      box-sizing: border-box;
+      flex-shrink: 0;
+    }
+
+    .editor-action-buttons {
+      display: flex;
+      gap: 6px;
+    }
+
+    .editor-ctrl-btn {
+      padding: 6px 12px;
+      font-size: 11px;
+      font-weight: 800;
+      border-radius: 4px;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .editor-ctrl-btn.reset-btn {
+      background: #3a3834;
+      color: #4da3ff;
+    }
+
+    .editor-ctrl-btn.trash-btn {
+      background: #c0392b;
+      color: #fff;
+    }
+
+    .editor-rules-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 11px;
+    }
+
+    .editor-turn-row, .editor-castling-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .editor-rule-label {
+      color: #888;
+      font-weight: 700;
+      min-width: 65px;
+    }
+
+    .turn-radio-label {
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      color: #ccc;
+    }
+
+    .castling-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #ccc;
+    }
+
+    /* Palette Bidak */
+    .editor-palette-container {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      width: 100%;
+      max-width: var(--board-size);
+      background: #d4a359; /* Nuansa emas khas Chessis palette */
+      padding: 6px;
+      border-radius: 6px;
+      margin-top: 6px;
+      box-sizing: border-box;
+    }
+
+    .palette-tools {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .palette-tool-btn {
+      width: 38px;
+      height: 34px;
+      background: #2a2825;
+      color: #fff;
+      border: 1px solid #444;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+    }
+
+    .palette-tool-btn.active {
+      background: #e74c3c !important;
+      border-color: #fff !important;
+      box-shadow: 0 0 6px #e74c3c;
+    }
+
+    .palette-pieces-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      grid-template-rows: repeat(2, 1fr);
+      gap: 4px;
+      flex: 1;
+    }
+
+    .palette-piece-slot {
+      height: 38px;
+      background: rgba(0, 0, 0, 0.15);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: background 0.15s, border-color 0.15s;
+    }
+
+    .palette-piece-slot img {
+      width: 80%;
+      height: 80%;
+      object-fit: contain;
+      pointer-events: none;
+    }
+
+    .palette-piece-slot:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .palette-piece-slot.selected {
+      border-color: #0077ff !important;
+      background: rgba(0, 119, 255, 0.35) !important;
+      box-shadow: 0 0 6px #0077ff;
+    }
+
+    /* FEN Container */
+    .editor-fen-container {
+      width: 100%;
+      max-width: var(--board-size);
+      margin-top: 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .fen-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .fen-btn {
+      background: #2980b9;
+      color: #fff;
+      border: none;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+
+    .fen-input-box {
+      width: 100%;
+      box-sizing: border-box;
+      background: #141311;
+      border: 1px solid #444;
+      color: #ddd;
+      font-family: monospace;
+      font-size: 11px;
+      padding: 6px 8px;
+      border-radius: 4px;
+    }
+
+    .editor-bottom-bar {
+      display: flex;
+      gap: 8px;
+      width: 100%;
+      max-width: var(--board-size);
+      margin-top: 8px;
+    }
+
+    .editor-footer-btn {
+      flex: 1;
+      padding: 10px;
+      font-size: 13px;
+      font-weight: 800;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .editor-footer-btn.cancel-btn {
+      background: #2980b9;
+      color: #fff;
+    }
+
+    .editor-footer-btn.finish-btn {
+      background: #27ae60;
+      color: #fff;
+    }
+
+    /* === STYLES UNTUK COMMAND BOARD (GAMBAR 3) === */
+    .command-column {
+      max-width: 520px;
+      width: 100%;
+    }
+
+    .command-top-status {
+      width: 100%;
+      max-width: var(--board-size);
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 6px;
+    }
+
+    .command-eco-title {
+      font-size: 13px;
+      color: #4da3ff;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 2px;
+    }
+
+    .command-history-strip {
+      display: flex;
+      gap: 6px;
+      background: #22201d;
+      padding: 4px 8px;
+      border-radius: 4px;
+      border: 1px solid #333;
+      min-height: 24px;
+      align-items: center;
+      overflow-x: auto;
+      font-size: 12px;
+      font-weight: 600;
+      color: #e0e0e0;
+    }
+
+    .command-engine-bar {
+      width: 100%;
+      max-width: var(--board-size);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #262421;
+      padding: 6px 10px;
+      border-radius: 4px;
+      border: 1px solid #3d3a34;
+      margin-top: 6px;
+      box-sizing: border-box;
+    }
+
+    .engine-eval-box {
+      font-size: 15px;
+      font-weight: 800;
+      color: #4da3ff;
+      display: flex;
+      align-items: center;
+    }
+
+    .command-playback-controls {
+      display: flex;
+      gap: 6px;
+    }
+
+    .command-icon-btn {
+      background: #383531;
+      border: 1px solid #555;
+      color: #fff;
+      font-size: 14px;
+      padding: 4px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .command-icon-btn.active {
+      background: #2980b9;
+      border-color: #3498db;
+    }
+
+    .command-line-suggestion {
+      width: 100%;
+      max-width: var(--board-size);
+      background: #191815;
+      border-left: 3px solid #81b64c;
+      padding: 6px 10px;
+      margin-top: 6px;
+      border-radius: 0 4px 4px 0;
+      font-size: 12px;
+      box-sizing: border-box;
+    }
+
+    .command-footer-nav {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      max-width: var(--board-size);
+      margin-top: 8px;
+      gap: 6px;
+    }
+
+    .command-nav-btn {
+      flex: 1;
+      background: #262421;
+      border: 1px solid #444;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 8px 4px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .command-nav-btn:hover {
+      background: #363430;
     }
   </style>
 </head>
 <body>
   <div class="web-container">
     <header>
-      <h1>♟️ Chess Master &amp; Game Review</h1>
-      <span style="font-size: 12px; color: #888;">Main vs Bot &amp; Analisis Evaluasi Pelatih Offline</span>
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <button id="btn-open-sidebar" class="menu-hamburger-btn" title="Buka Menu Chessis">☰</button>
+        <h1>♟️ Chess Master &amp; Game Review</h1>
+      </div>
+      <div style="display:flex; align-items:center; gap: 8px;">
+        <span id="header-user-tag" style="font-size: 11px; background: #262421; padding: 4px 8px; border-radius: 4px; border: 1px solid #444; color: #81b64c; font-weight:700;">User: -</span>
+        <button id="btn-change-username-header" style="background:transparent; border:none; cursor:pointer; color:#aaa; font-size:14px;" title="Ganti Username">✏️</button>
+      </div>
     </header>
+
+    <!-- SIDEBAR DRAWER MENU (GAYA CHESSIS GAMBAR 1) -->
+    <div id="sidebar-drawer-overlay" class="sidebar-overlay" style="display: none;">
+      <div class="sidebar-drawer">
+        <div class="sidebar-header">
+          <div class="sidebar-app-icon">♟️</div>
+          <h2 class="sidebar-title">Chessis</h2>
+          <div class="sidebar-engine-pill">⚠️ Stockfish 16.1</div>
+          <button id="btn-close-sidebar" class="sidebar-close-btn">&times;</button>
+        </div>
+
+        <div class="sidebar-menu-list">
+          <button class="sidebar-item" id="sidebar-item-analyzer">
+            <span class="sidebar-icon">🔍</span>
+            <span class="sidebar-text">Papan Analisis</span>
+          </button>
+          <button class="sidebar-item" id="sidebar-item-play">
+            <span class="sidebar-icon">♟️</span>
+            <span class="sidebar-text">Bermain Catur</span>
+          </button>
+          <button class="sidebar-item" id="sidebar-item-import">
+            <span class="sidebar-icon">🖼️</span>
+            <span class="sidebar-text">Analisis Permainan</span>
+          </button>
+          <!-- Menu Khusus Username mamad -->
+          <button class="sidebar-item secret-menu" id="sidebar-item-editor" style="display: none;">
+            <span class="sidebar-icon">📐</span>
+            <span class="sidebar-text">Editor Papan / Pindai</span>
+            <span class="sidebar-badge-vip">MAMAD</span>
+          </button>
+          <button class="sidebar-item" id="sidebar-item-archive" onclick="alert('Fitur riwayat tersimpan otomatis di browser!')">
+            <span class="sidebar-icon">🗄️</span>
+            <span class="sidebar-text">Arsip Permainan</span>
+          </button>
+          <button class="sidebar-item" id="sidebar-item-openings" onclick="alert('Fitur eksplorasi pembukaan catur!')">
+            <span class="sidebar-icon">🎯</span>
+            <span class="sidebar-text">Pembukaan / Jebakan</span>
+          </button>
+
+          <div class="sidebar-divider"></div>
+
+          <button class="sidebar-item" id="sidebar-item-settings" onclick="document.getElementById('modal-welcome-username').style.display='flex'">
+            <span class="sidebar-icon">⚙️</span>
+            <span class="sidebar-text">Pengaturan (Ganti Nama)</span>
+          </button>
+          <button class="sidebar-item highlight-pro">
+            <span class="sidebar-icon">⭐</span>
+            <span class="sidebar-text">Chessis Pro (Unlocked)</span>
+          </button>
+          <button class="sidebar-item" onclick="alert('Chess Master & Game Review Web App - Stockfish Powered')">
+            <span class="sidebar-icon">ℹ️</span>
+            <span class="sidebar-text">Tentang</span>
+          </button>
+        </div>
+      </div>
+    </div>
 
     <div class="tabs">
       <button class="tab-btn active" id="tab-btn-play">🎮 Main vs Bot</button>
       <button class="tab-btn" id="tab-btn-analyzer">🔍 Papan Analisis</button>
       <button class="tab-btn" id="tab-btn-import">📥 Impor PGN</button>
+      <button class="tab-btn" id="tab-btn-editor" style="display: none;">📐 Editor Papan / Pindai</button>
+      <button class="tab-btn" id="tab-btn-command" style="display: none;">⚡ Command Board</button>
     </div>
 
     <!-- TAB PLAY OFFLINE -->
@@ -627,6 +1214,164 @@
 
         <div style="display:flex; justify-content: flex-end; gap: 8px;">
           <button id="btn-load-pgn" class="primary-btn">Mulai Analisis</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB EDITOR PAPAN / PINDAI (Gambar 2 Chessis) -->
+    <div class="tab-content" id="tab-content-editor" style="overflow-y: auto;">
+      <div class="analyzer-container" style="justify-content: center; height: auto; min-height: 100%; overflow: visible;">
+        <div class="board-column editor-column">
+          
+          <!-- Top Controls Bar: Reset, Hapus, Giliran Jalan, Rokade Standar -->
+          <div class="editor-top-controls">
+            <div class="editor-action-buttons">
+              <button id="btn-editor-reset" class="editor-ctrl-btn reset-btn" title="Atur Ulang Posisi Standar">
+                🔄 RESET
+              </button>
+              <button id="btn-editor-trash-all" class="editor-ctrl-btn trash-btn" title="Hapus Semua Bidak (Kosongkan Papan)">
+                🗑️ HAPUS
+              </button>
+            </div>
+
+            <!-- Giliran Jalan & Rokade -->
+            <div class="editor-rules-panel">
+              <div class="editor-turn-row">
+                <span class="editor-rule-label">Giliran Jalan</span>
+                <label class="turn-radio-label">
+                  <input type="radio" name="editor-turn" value="w" id="editor-turn-white" checked>
+                  <span class="turn-indicator turn-white">⚪ Putih</span>
+                </label>
+                <label class="turn-radio-label">
+                  <input type="radio" name="editor-turn" value="b" id="editor-turn-black">
+                  <span class="turn-indicator turn-black">⚫ Hitam</span>
+                </label>
+              </div>
+
+              <div class="editor-castling-row">
+                <span class="editor-rule-label">Rokade</span>
+                <div class="castling-group">
+                  <span class="castling-team-label">⚪</span>
+                  <label><input type="checkbox" id="castling-wk" checked> O-O</label>
+                  <label><input type="checkbox" id="castling-wq" checked> O-O-O</label>
+                </div>
+                <div class="castling-group">
+                  <span class="castling-team-label">⚫</span>
+                  <label><input type="checkbox" id="castling-bk" checked> O-O</label>
+                  <label><input type="checkbox" id="castling-bq" checked> O-O-O</label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Papan Catur Editor -->
+          <div class="board-wrapper">
+            <div class="board" id="editor-chessboard">
+              <!-- Kotak papan dibuat dinamis -->
+            </div>
+          </div>
+
+          <!-- Palet Bidak (Piece Palette) & Tombol Sampah Penghapus Satuan -->
+          <div class="editor-palette-container">
+            <div class="palette-tools">
+              <button id="btn-palette-delete" class="palette-tool-btn" title="Mode Hapus: Klik pasukan di papan untuk menghapus satuan">
+                🗑️<span style="font-size:10px; font-weight:800; display:block;">HAPUS</span>
+              </button>
+              <button id="btn-palette-reverse" class="palette-tool-btn" title="Reverse / Balik Sisi Bidak">
+                🔁
+              </button>
+            </div>
+            <div class="palette-pieces-grid">
+              <!-- Putih: K Q R B N P -->
+              <div class="palette-piece-slot" data-piece="K" title="Raja Putih"><img src="assets/pieces/wk.png" alt="K"></div>
+              <div class="palette-piece-slot" data-piece="Q" title="Menteri Putih"><img src="assets/pieces/wq.png" alt="Q"></div>
+              <div class="palette-piece-slot" data-piece="R" title="Benteng Putih"><img src="assets/pieces/wr.png" alt="R"></div>
+              <div class="palette-piece-slot" data-piece="B" title="Gajah Putih"><img src="assets/pieces/wb.png" alt="B"></div>
+              <div class="palette-piece-slot" data-piece="N" title="Kuda Putih"><img src="assets/pieces/wn.png" alt="N"></div>
+              <div class="palette-piece-slot" data-piece="P" title="Bidak/Pion Putih"><img src="assets/pieces/wp.png" alt="P"></div>
+              <!-- Hitam: k q r b n p -->
+              <div class="palette-piece-slot" data-piece="k" title="Raja Hitam"><img src="assets/pieces/bk.png" alt="k"></div>
+              <div class="palette-piece-slot" data-piece="q" title="Menteri Hitam"><img src="assets/pieces/bq.png" alt="q"></div>
+              <div class="palette-piece-slot" data-piece="r" title="Benteng Hitam"><img src="assets/pieces/br.png" alt="r"></div>
+              <div class="palette-piece-slot" data-piece="b" title="Gajah Hitam"><img src="assets/pieces/bb.png" alt="b"></div>
+              <div class="palette-piece-slot" data-piece="n" title="Kuda Hitam"><img src="assets/pieces/bn.png" alt="n"></div>
+              <div class="palette-piece-slot" data-piece="p" title="Bidak/Pion Hitam"><img src="assets/pieces/bp.png" alt="p"></div>
+            </div>
+          </div>
+
+          <!-- FEN Bar & Actions (Tempel / Salin FEN) -->
+          <div class="editor-fen-container">
+            <div class="fen-header-row">
+              <span style="font-size: 11px; color:#aaa; font-weight:700;">FEN Posisi:</span>
+              <div style="display:flex; gap:6px;">
+                <button id="btn-paste-fen" class="fen-btn">Tempel FEN</button>
+                <button id="btn-copy-fen" class="fen-btn">Salin FEN</button>
+              </div>
+            </div>
+            <input type="text" id="editor-fen-input" class="fen-input-box" readonly>
+          </div>
+
+          <!-- Tombol Batal & Selesai -->
+          <div class="editor-bottom-bar">
+            <button id="btn-editor-cancel" class="editor-footer-btn cancel-btn">BATAL</button>
+            <button id="btn-editor-finish" class="editor-footer-btn finish-btn">SELESAI</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB COMMAND BOARD (Gambar 3 - Bot Stockfish POV Bawah, Rekomendasi Langkah Kedua Pihak) -->
+    <div class="tab-content" id="tab-content-command" style="overflow-y: auto;">
+      <div class="analyzer-container" style="justify-content: center; height: auto; min-height: 100%; overflow: visible;">
+        <div class="board-column command-column" style="height: auto; overflow: visible; padding-bottom: 24px;">
+          
+          <!-- Command Header: Pembukaan / Evaluasi Catur Realtime -->
+          <div class="command-top-status">
+            <div class="command-eco-title" id="command-eco-title">A40: Custom Board Position</div>
+            <div class="command-history-strip" id="command-history-strip">
+              <!-- Riwayat langkah terkini (contoh: 1. d4 b5) -->
+            </div>
+          </div>
+
+          <!-- Board Command + Eval Bar -->
+          <div class="board-wrapper">
+            <div class="eval-bar-container" title="Evaluation Bar">
+              <div class="eval-bar-white" id="command-eval-bar"></div>
+            </div>
+            <div class="board" id="command-chessboard">
+              <!-- Squares generated by JS -->
+            </div>
+          </div>
+
+          <!-- Info Bar Rekomendasi & Engine (Sesuai Gambar 3) -->
+          <div class="command-engine-bar">
+            <div class="engine-eval-box" id="command-eval-badge">
+              <span id="command-eval-num">+0.00</span>
+              <span id="command-eval-depth" style="font-size: 11px; color:#ddd; margin-left:4px;">(kedalaman: 18)</span>
+            </div>
+            <div class="command-playback-controls">
+              <button id="btn-command-auto-stockfish" class="command-icon-btn active" title="Jalankan Otomatis Stockfish (Play/Pause)">⏸️</button>
+              <button id="btn-command-step-both" class="command-icon-btn" title="Jalankan 1 Langkah Bot Sekarang">🤖</button>
+              <button id="btn-command-restart" class="command-icon-btn" title="Reset ke Posisi Awal Editor">🔄</button>
+            </div>
+          </div>
+
+          <!-- Baris Saran Rekomendasi Langkah Terbaik Kedua Sisi (Hitam & Putih) -->
+          <div class="command-line-suggestion">
+            <strong id="command-suggest-label" style="color: #4da3ff;">★ Best:</strong>
+            <span id="command-suggest-moves" style="color: #fff; font-size: 13px; font-weight:600;">Menghitung langkah terbaik...</span>
+          </div>
+
+          <!-- Bottom Navigation Footer: Menu, Flip, Undo, Redo, More -->
+          <div class="command-footer-nav">
+            <button id="btn-command-back-editor" class="command-nav-btn" title="Kembali ke Editor Papan">✏️ Edit</button>
+            <button id="btn-command-flip" class="command-nav-btn" title="Balik Sudut Pandang Papan">🔁</button>
+            <button id="btn-command-undo" class="command-nav-btn" title="Mundur 1 Langkah">⏮️</button>
+            <button id="btn-command-redo" class="command-nav-btn" title="Maju 1 Langkah">⏭️</button>
+            <button id="btn-command-back-home" class="command-nav-btn" title="Kembali ke Menu Utama">🏠</button>
+          </div>
+
         </div>
       </div>
     </div>

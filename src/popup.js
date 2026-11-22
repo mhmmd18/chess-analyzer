@@ -110,9 +110,24 @@ document.addEventListener('DOMContentLoaded', () => {
   const tabBtnPlay = document.getElementById('tab-btn-play');
   const tabBtnAnalyzer = document.getElementById('tab-btn-analyzer');
   const tabBtnImport = document.getElementById('tab-btn-import');
+  const tabBtnEditor = document.getElementById('tab-btn-editor');
+  const tabBtnCommand = document.getElementById('tab-btn-command');
   const tabContentPlay = document.getElementById('tab-content-play');
   const tabContentAnalyzer = document.getElementById('tab-content-analyzer');
   const tabContentImport = document.getElementById('tab-content-import');
+  const tabContentEditor = document.getElementById('tab-content-editor');
+  const tabContentCommand = document.getElementById('tab-content-command');
+
+  // DOM Elements - Sidebar Drawer
+  const btnOpenSidebar = document.getElementById('btn-open-sidebar');
+  const btnCloseSidebar = document.getElementById('btn-close-sidebar');
+  const sidebarOverlay = document.getElementById('sidebar-drawer-overlay');
+  const sidebarItemPlay = document.getElementById('sidebar-item-play');
+  const sidebarItemAnalyzer = document.getElementById('sidebar-item-analyzer');
+  const sidebarItemImport = document.getElementById('sidebar-item-import');
+  const sidebarItemEditor = document.getElementById('sidebar-item-editor');
+  const headerUserTag = document.getElementById('header-user-tag');
+  const btnChangeUsernameHeader = document.getElementById('btn-change-username-header');
 
   // DOM Elements - Play Mode
   const playChessboardEl = document.getElementById('play-chessboard');
@@ -224,19 +239,81 @@ document.addEventListener('DOMContentLoaded', () => {
   function switchTab(target) {
     stopAutoPlay();
     stopPlayGameTimer();
+    stopCommandStockfish();
 
-    tabBtnPlay.classList.toggle('active', target === 'play');
-    tabBtnAnalyzer.classList.toggle('active', target === 'analyzer');
-    tabBtnImport.classList.toggle('active', target === 'import');
+    if (tabBtnPlay) tabBtnPlay.classList.toggle('active', target === 'play');
+    if (tabBtnAnalyzer) tabBtnAnalyzer.classList.toggle('active', target === 'analyzer');
+    if (tabBtnImport) tabBtnImport.classList.toggle('active', target === 'import');
+    if (tabBtnEditor) tabBtnEditor.classList.toggle('active', target === 'editor');
+    if (tabBtnCommand) tabBtnCommand.classList.toggle('active', target === 'command');
 
-    tabContentPlay.classList.toggle('active', target === 'play');
-    tabContentAnalyzer.classList.toggle('active', target === 'analyzer');
-    tabContentImport.classList.toggle('active', target === 'import');
+    if (tabContentPlay) tabContentPlay.classList.toggle('active', target === 'play');
+    if (tabContentAnalyzer) tabContentAnalyzer.classList.toggle('active', target === 'analyzer');
+    if (tabContentImport) tabContentImport.classList.toggle('active', target === 'import');
+    if (tabContentEditor) tabContentEditor.classList.toggle('active', target === 'editor');
+    if (tabContentCommand) tabContentCommand.classList.toggle('active', target === 'command');
+
+    if (target === 'editor') {
+      renderEditorBoard();
+    } else if (target === 'command') {
+      renderCommandBoard();
+      updateCommandEvaluation();
+    }
   }
 
-  tabBtnPlay.addEventListener('click', () => switchTab('play'));
-  tabBtnAnalyzer.addEventListener('click', () => switchTab('analyzer'));
-  tabBtnImport.addEventListener('click', () => switchTab('import'));
+  if (tabBtnPlay) tabBtnPlay.addEventListener('click', () => switchTab('play'));
+  if (tabBtnAnalyzer) tabBtnAnalyzer.addEventListener('click', () => switchTab('analyzer'));
+  if (tabBtnImport) tabBtnImport.addEventListener('click', () => switchTab('import'));
+  if (tabBtnEditor) tabBtnEditor.addEventListener('click', () => switchTab('editor'));
+  if (tabBtnCommand) tabBtnCommand.addEventListener('click', () => switchTab('command'));
+
+  // Sidebar listeners
+  if (btnOpenSidebar) {
+    btnOpenSidebar.addEventListener('click', () => {
+      checkMamadVipAccess();
+      if (sidebarOverlay) sidebarOverlay.style.display = 'flex';
+    });
+  }
+  if (btnCloseSidebar) {
+    btnCloseSidebar.addEventListener('click', () => {
+      if (sidebarOverlay) sidebarOverlay.style.display = 'none';
+    });
+  }
+  if (sidebarOverlay) {
+    sidebarOverlay.addEventListener('click', (e) => {
+      if (e.target === sidebarOverlay) sidebarOverlay.style.display = 'none';
+    });
+  }
+
+  if (sidebarItemPlay) {
+    sidebarItemPlay.addEventListener('click', () => {
+      if (sidebarOverlay) sidebarOverlay.style.display = 'none';
+      switchTab('play');
+    });
+  }
+  if (sidebarItemAnalyzer) {
+    sidebarItemAnalyzer.addEventListener('click', () => {
+      if (sidebarOverlay) sidebarOverlay.style.display = 'none';
+      switchTab('analyzer');
+    });
+  }
+  if (sidebarItemImport) {
+    sidebarItemImport.addEventListener('click', () => {
+      if (sidebarOverlay) sidebarOverlay.style.display = 'none';
+      switchTab('import');
+    });
+  }
+  if (sidebarItemEditor) {
+    sidebarItemEditor.addEventListener('click', () => {
+      if (sidebarOverlay) sidebarOverlay.style.display = 'none';
+      switchTab('editor');
+    });
+  }
+  if (btnChangeUsernameHeader) {
+    btnChangeUsernameHeader.addEventListener('click', () => {
+      if (modalWelcomeUsername) modalWelcomeUsername.style.display = 'flex';
+    });
+  }
 
   // --- HIGH-ACCURACY POSITIONAL EVALUATOR ---
   function quickEvaluatePosition(gameInstance) {
@@ -2196,13 +2273,746 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     updateProfileBars();
+    checkMamadVipAccess();
   }
 
-  // Initial render of play board
+  function checkMamadVipAccess() {
+    const name = (activeUserNickname || '').trim().toLowerCase();
+    const isMamad = name === 'mamad';
+    if (tabBtnEditor) {
+      tabBtnEditor.style.display = isMamad ? 'inline-block' : 'none';
+    }
+    if (sidebarItemEditor) {
+      sidebarItemEditor.style.display = isMamad ? 'flex' : 'none';
+    }
+    if (headerUserTag) {
+      headerUserTag.textContent = `User: ${activeUserNickname || 'Tamu'}`;
+      if (isMamad) {
+        headerUserTag.innerHTML = `⭐ <b>mamad</b> <span style="font-size:9px; background:#81b64c; color:#111; padding:1px 4px; border-radius:3px; margin-left:2px;">VIP</span>`;
+      }
+    }
+  }
+
+  // ==========================================================
+  // --- MODULE EDITOR PAPAN / PINDAI (GAMBAR 2 CHESSIS) ---
+  // ==========================================================
+  const editorChessboardEl = document.getElementById('editor-chessboard');
+  const btnEditorReset = document.getElementById('btn-editor-reset');
+  const btnEditorTrashAll = document.getElementById('btn-editor-trash-all');
+  const btnPaletteDelete = document.getElementById('btn-palette-delete');
+  const btnPaletteReverse = document.getElementById('btn-palette-reverse');
+  const editorFenInput = document.getElementById('editor-fen-input');
+  const btnCopyFen = document.getElementById('btn-copy-fen');
+  const btnPasteFen = document.getElementById('btn-paste-fen');
+  const btnEditorCancel = document.getElementById('btn-editor-cancel');
+  const btnEditorFinish = document.getElementById('btn-editor-finish');
+  const paletteSlots = document.querySelectorAll('.palette-piece-slot');
+  const turnRadioWhite = document.getElementById('editor-turn-white');
+  const turnRadioBlack = document.getElementById('editor-turn-black');
+  const chkWK = document.getElementById('castling-wk');
+  const chkWQ = document.getElementById('castling-wq');
+  const chkBK = document.getElementById('castling-bk');
+  const chkBQ = document.getElementById('castling-bq');
+
+  // Matrix internal posisi editor: array 8x8 (baris 0 = rank 8, baris 7 = rank 1)
+  // Tiap elemen: null atau { type: 'p'|'n'|'b'|'r'|'q'|'k', color: 'w'|'b' }
+  let editorBoardState = createStandardBoardArray();
+  let editorSelectedPiece = null; // null atau { type: 'p', color: 'w' }
+  let isDeleteMode = false; // Jika aktif, klik petak di papan akan menghapus bidak
+  let isEditorFlipped = false;
+
+  function createStandardBoardArray() {
+    const c = new Chess();
+    return c.board();
+  }
+
+  function renderEditorBoard() {
+    if (!editorChessboardEl) return;
+    editorChessboardEl.innerHTML = '';
+
+    const ranks = isEditorFlipped ? [0, 1, 2, 3, 4, 5, 6, 7] : [7, 6, 5, 4, 3, 2, 1, 0];
+    const files = isEditorFlipped ? [7, 6, 5, 4, 3, 2, 1, 0] : [0, 1, 2, 3, 4, 5, 6, 7];
+
+    ranks.forEach((r, rIdx) => {
+      files.forEach((f, fIdx) => {
+        const fileChar = String.fromCharCode(97 + f);
+        const rankNum = r + 1;
+        const sqName = fileChar + rankNum;
+
+        const sqEl = document.createElement('div');
+        const isLight = (r + f) % 2 !== 0;
+        sqEl.className = `square ${isLight ? 'light' : 'dark'}`;
+        sqEl.dataset.square = sqName;
+
+        // Koordinat
+        if (fIdx === 0) {
+          const rLbl = document.createElement('span');
+          rLbl.className = 'coord-rank';
+          rLbl.textContent = rankNum;
+          sqEl.appendChild(rLbl);
+        }
+        if (rIdx === 7) {
+          const fLbl = document.createElement('span');
+          fLbl.className = 'coord-file';
+          fLbl.textContent = fileChar;
+          sqEl.appendChild(fLbl);
+        }
+
+        // Bidak di petak
+        const piece = editorBoardState[7 - r][f];
+        if (piece) {
+          sqEl.appendChild(createPieceElement(piece));
+        }
+
+        // Event Klik Petak Editor
+        sqEl.addEventListener('click', () => onEditorSquareClick(r, f));
+
+        editorChessboardEl.appendChild(sqEl);
+      });
+    });
+
+    updateEditorFen();
+  }
+
+  function onEditorSquareClick(rankIdx, fileIdx) {
+    const currentPiece = editorBoardState[7 - rankIdx][fileIdx];
+
+    if (isDeleteMode) {
+      // Hapus satuan bidak jika diklik
+      if (currentPiece) {
+        editorBoardState[7 - rankIdx][fileIdx] = null;
+        renderEditorBoard();
+      }
+      return;
+    }
+
+    if (editorSelectedPiece) {
+      // Taruh bidak terpilih dari palet ke petak ini
+      editorBoardState[7 - rankIdx][fileIdx] = {
+        type: editorSelectedPiece.type,
+        color: editorSelectedPiece.color
+      };
+      renderEditorBoard();
+    } else {
+      // Jika tidak ada alat terpilih, klik bidak untuk memindahkannya / menghapusnya
+      if (currentPiece) {
+        editorSelectedPiece = { type: currentPiece.type, color: currentPiece.color };
+        editorBoardState[7 - rankIdx][fileIdx] = null;
+        renderEditorBoard();
+        highlightActivePaletteSlot();
+      }
+    }
+  }
+
+  // Pilih bidak dari palet
+  paletteSlots.forEach(slot => {
+    slot.addEventListener('click', () => {
+      const code = slot.dataset.piece; // 'K', 'q', dll.
+      if (!code) return;
+
+      // Matikan mode hapus
+      isDeleteMode = false;
+      if (btnPaletteDelete) btnPaletteDelete.classList.remove('active');
+
+      const isWhite = code === code.toUpperCase();
+      editorSelectedPiece = {
+        type: code.toLowerCase(),
+        color: isWhite ? 'w' : 'b'
+      };
+
+      highlightActivePaletteSlot();
+    });
+  });
+
+  function highlightActivePaletteSlot() {
+    paletteSlots.forEach(s => {
+      const c = s.dataset.piece;
+      if (editorSelectedPiece && !isDeleteMode) {
+        const expected = editorSelectedPiece.color === 'w' 
+          ? editorSelectedPiece.type.toUpperCase() 
+          : editorSelectedPiece.type.toLowerCase();
+        s.classList.toggle('selected', c === expected);
+      } else {
+        s.classList.remove('selected');
+      }
+    });
+  }
+
+  // Tombol Sampah Palet Bawah: Aktifkan mode hapus satuan
+  if (btnPaletteDelete) {
+    btnPaletteDelete.addEventListener('click', () => {
+      isDeleteMode = !isDeleteMode;
+      btnPaletteDelete.classList.toggle('active', isDeleteMode);
+      if (isDeleteMode) {
+        editorSelectedPiece = null;
+        highlightActivePaletteSlot();
+      }
+    });
+  }
+
+  // Tombol Reverse Palet: Balik warna semua bidak di papan
+  if (btnPaletteReverse) {
+    btnPaletteReverse.addEventListener('click', () => {
+      for (let r = 0; r < 8; r++) {
+        for (let c = 0; c < 8; c++) {
+          const p = editorBoardState[r][c];
+          if (p) {
+            p.color = p.color === 'w' ? 'b' : 'w';
+          }
+        }
+      }
+      renderEditorBoard();
+    });
+  }
+
+  // Tombol RESET di atas: Tata kembali ke formasi standar
+  if (btnEditorReset) {
+    btnEditorReset.addEventListener('click', () => {
+      editorBoardState = createStandardBoardArray();
+      if (turnRadioWhite) turnRadioWhite.checked = true;
+      if (chkWK) chkWK.checked = true;
+      if (chkWQ) chkWQ.checked = true;
+      if (chkBK) chkBK.checked = true;
+      if (chkBQ) chkBQ.checked = true;
+      renderEditorBoard();
+    });
+  }
+
+  // Tombol HAPUS di atas: Kosongkan semua pasukan di papan
+  if (btnEditorTrashAll) {
+    btnEditorTrashAll.addEventListener('click', () => {
+      for (let r = 0; r < 8; r++) {
+        for (let c = 0; c < 8; c++) {
+          editorBoardState[r][c] = null;
+        }
+      }
+      renderEditorBoard();
+    });
+  }
+
+  // Hitung FEN dari posisi editor saat ini
+  function buildEditorFen() {
+    let rows = [];
+    for (let r = 0; r < 8; r++) {
+      let empty = 0;
+      let rowStr = '';
+      for (let c = 0; c < 8; c++) {
+        const p = editorBoardState[r][c];
+        if (!p) {
+          empty++;
+        } else {
+          if (empty > 0) {
+            rowStr += empty;
+            empty = 0;
+          }
+          rowStr += p.color === 'w' ? p.type.toUpperCase() : p.type.toLowerCase();
+        }
+      }
+      if (empty > 0) rowStr += empty;
+      rows.push(rowStr);
+    }
+    const piecePart = rows.join('/');
+    const turn = turnRadioWhite && turnRadioWhite.checked ? 'w' : 'b';
+
+    let castling = '';
+    if (chkWK && chkWK.checked) castling += 'K';
+    if (chkWQ && chkWQ.checked) castling += 'Q';
+    if (chkBK && chkBK.checked) castling += 'k';
+    if (chkBQ && chkBQ.checked) castling += 'q';
+    if (!castling) castling = '-';
+
+    return `${piecePart} ${turn} ${castling} - 0 1`;
+  }
+
+  function updateEditorFen() {
+    if (editorFenInput) {
+      editorFenInput.value = buildEditorFen();
+    }
+  }
+
+  // Listener radio & checkbox castling
+  [turnRadioWhite, turnRadioBlack, chkWK, chkWQ, chkBK, chkBQ].forEach(el => {
+    if (el) el.addEventListener('change', updateEditorFen);
+  });
+
+  // Salin & Tempel FEN
+  if (btnCopyFen) {
+    btnCopyFen.addEventListener('click', () => {
+      const fen = buildEditorFen();
+      navigator.clipboard?.writeText(fen).then(() => {
+        alert('FEN berhasil disalin ke clipboard:\n' + fen);
+      }).catch(() => {
+        alert(fen);
+      });
+    });
+  }
+
+  if (btnPasteFen) {
+    btnPasteFen.addEventListener('click', () => {
+      const input = prompt('Tempel FEN catur di sini:');
+      if (input && input.trim()) {
+        loadFenToEditor(input.trim());
+      }
+    });
+  }
+
+  function loadFenToEditor(fen) {
+    const temp = new Chess();
+    const valid = temp.load(fen);
+    if (!valid) {
+      alert('Format FEN tidak valid!');
+      return;
+    }
+    editorBoardState = temp.board();
+    const parts = fen.split(' ');
+    if (parts.length > 1) {
+      if (turnRadioWhite) turnRadioWhite.checked = parts[1] === 'w';
+      if (turnRadioBlack) turnRadioBlack.checked = parts[1] === 'b';
+    }
+    if (parts.length > 2) {
+      const c = parts[2];
+      if (chkWK) chkWK.checked = c.includes('K');
+      if (chkWQ) chkWQ.checked = c.includes('Q');
+      if (chkBK) chkBK.checked = c.includes('k');
+      if (chkBQ) chkBQ.checked = c.includes('q');
+    }
+    renderEditorBoard();
+  }
+
+  // Batal Editor: kembali ke tab Play
+  if (btnEditorCancel) {
+    btnEditorCancel.addEventListener('click', () => switchTab('play'));
+  }
+
+  // SELESAI Editor -> Buka Halaman COMMAND (Gambar 3)
+  if (btnEditorFinish) {
+    btnEditorFinish.addEventListener('click', () => {
+      const fen = buildEditorFen();
+      const testChess = new Chess();
+      if (!testChess.load(fen)) {
+        alert('Posisi catur tidak valid! Pastikan ada Raja untuk kedua belah pihak dan posisi legal.');
+        return;
+      }
+      // Simpan posisi awal untuk Command Board
+      commandInitialFen = fen;
+      initCommandGame(fen);
+      switchTab('command');
+    });
+  }
+
+  // ==========================================================
+  // --- MODULE COMMAND BOARD (GAMBAR 3 CHESSIS) ---
+  // ==========================================================
+  const commandChessboardEl = document.getElementById('command-chessboard');
+  const commandEvalBarEl = document.getElementById('command-eval-bar');
+  const commandEcoTitle = document.getElementById('command-eco-title');
+  const commandHistoryStrip = document.getElementById('command-history-strip');
+  const commandEvalNum = document.getElementById('command-eval-num');
+  const commandEvalDepth = document.getElementById('command-eval-depth');
+  const commandSuggestMoves = document.getElementById('command-suggest-moves');
+  const btnCommandAutoStockfish = document.getElementById('btn-command-auto-stockfish');
+  const btnCommandStepBoth = document.getElementById('btn-command-step-both');
+  const btnCommandRestart = document.getElementById('btn-command-restart');
+  const btnCommandBackEditor = document.getElementById('btn-command-back-editor');
+  const btnCommandFlip = document.getElementById('btn-command-flip');
+  const btnCommandUndo = document.getElementById('btn-command-undo');
+  const btnCommandRedo = document.getElementById('btn-command-redo');
+  const btnCommandBackHome = document.getElementById('btn-command-back-home');
+
+  let commandInitialFen = '';
+  let commandChess = new Chess();
+  let commandHistory = []; // Array of moves
+  let commandUndoStack = [];
+  let commandSelectedSquare = null;
+  let isCommandFlipped = false;
+  let isCommandAutoPlay = false;
+  let commandAutoTimer = null;
+  let commandBestMove = null; // { from, to, san }
+
+  function initCommandGame(fen) {
+    commandChess = new Chess(fen);
+    commandHistory = [];
+    commandUndoStack = [];
+    commandSelectedSquare = null;
+    isCommandFlipped = false; // POV Anda yang bawah (Putih di bawah secara default)
+    isCommandAutoPlay = false;
+    if (btnCommandAutoStockfish) {
+      btnCommandAutoStockfish.classList.remove('active');
+      btnCommandAutoStockfish.textContent = '▶️';
+    }
+    renderCommandBoard();
+    updateCommandEvaluation();
+  }
+
+  function renderCommandBoard() {
+    if (!commandChessboardEl) return;
+    commandChessboardEl.innerHTML = '';
+
+    const board = commandChess.board();
+    const ranks = isCommandFlipped ? [0, 1, 2, 3, 4, 5, 6, 7] : [7, 6, 5, 4, 3, 2, 1, 0];
+    const files = isCommandFlipped ? [7, 6, 5, 4, 3, 2, 1, 0] : [0, 1, 2, 3, 4, 5, 6, 7];
+
+    const lastMove = commandHistory.length > 0 ? commandHistory[commandHistory.length - 1] : null;
+    const checkedKingSquare = commandChess.in_check() ? findKingSquare(commandChess, commandChess.turn()) : null;
+
+    let legalMoves = [];
+    if (commandSelectedSquare) {
+      legalMoves = commandChess.moves({ square: commandSelectedSquare, verbose: true });
+    }
+
+    ranks.forEach((r, rIdx) => {
+      files.forEach((f, fIdx) => {
+        const fileChar = String.fromCharCode(97 + f);
+        const rankNum = r + 1;
+        const sqName = fileChar + rankNum;
+
+        const sqEl = document.createElement('div');
+        const isLight = (r + f) % 2 !== 0;
+        sqEl.className = `square ${isLight ? 'light' : 'dark'}`;
+        sqEl.dataset.square = sqName;
+
+        if (checkedKingSquare === sqName) {
+          sqEl.classList.add('check-square');
+        }
+
+        if (fIdx === 0) {
+          const rLbl = document.createElement('span');
+          rLbl.className = 'coord-rank';
+          rLbl.textContent = rankNum;
+          sqEl.appendChild(rLbl);
+        }
+        if (rIdx === 7) {
+          const fLbl = document.createElement('span');
+          fLbl.className = 'coord-file';
+          fLbl.textContent = fileChar;
+          sqEl.appendChild(fLbl);
+        }
+
+        if (lastMove) {
+          if (lastMove.from === sqName) sqEl.classList.add('highlight-from');
+          if (lastMove.to === sqName) sqEl.classList.add('highlight-to');
+        }
+
+        if (commandSelectedSquare === sqName) {
+          sqEl.classList.add('selected-square');
+        }
+
+        const matchedMove = legalMoves.find(m => m.to === sqName);
+        if (matchedMove) {
+          if (matchedMove.captured) {
+            sqEl.classList.add('possible-capture');
+          } else {
+            sqEl.classList.add('possible-move');
+          }
+        }
+
+        const piece = board[7 - r][f];
+        if (piece) {
+          sqEl.appendChild(createPieceElement(piece));
+        }
+
+        // Klik petak Command Board (Pemain bisa gerakkan PUTIH maupun HITAM)
+        sqEl.addEventListener('click', () => onCommandSquareClick(sqName));
+
+        commandChessboardEl.appendChild(sqEl);
+      });
+    });
+
+    // Render Panah Rekomendasi Langkah Terbaik (Stockfish Move Arrows Hijau)
+    if (commandBestMove && commandBestMove.from && commandBestMove.to) {
+      renderMoveArrows(commandChessboardEl, isCommandFlipped, null, null, commandBestMove.from, commandBestMove.to);
+    }
+
+    // Update Eval Bar
+    const whiteScore = quickEvaluatePosition(commandChess);
+    let winProb = 50 + 50 * (2 / (1 + Math.exp(-0.004 * (whiteScore * 100))) - 1);
+    winProb = Math.max(5, Math.min(95, winProb));
+    if (commandEvalBarEl) commandEvalBarEl.style.height = `${winProb}%`;
+
+    // Update History Strip (contoh: 1. d4 b5 2. e4)
+    updateCommandHistoryUI();
+  }
+
+  function onCommandSquareClick(squareName) {
+    if (commandChess.game_over()) return;
+
+    const turn = commandChess.turn();
+    const piece = commandChess.get(squareName);
+
+    // Jika sudah ada petak yang dipilih, coba eksekusi langkah
+    if (commandSelectedSquare) {
+      if (commandSelectedSquare === squareName) {
+        commandSelectedSquare = null;
+        renderCommandBoard();
+        return;
+      }
+
+      // Cek apakah pemain ganti memilih bidak lain milik warna yang sama
+      if (piece && piece.color === turn) {
+        commandSelectedSquare = squareName;
+        renderCommandBoard();
+        return;
+      }
+
+      const moveObj = commandChess.move({
+        from: commandSelectedSquare,
+        to: squareName,
+        promotion: 'q'
+      });
+
+      if (moveObj) {
+        commandHistory.push(moveObj);
+        commandUndoStack = [];
+        commandSelectedSquare = null;
+        renderCommandBoard();
+        updateCommandEvaluation();
+        return;
+      }
+    }
+
+    // Pilih bidak jika milik warna yang sedang giliran jalan
+    if (piece && piece.color === turn) {
+      commandSelectedSquare = squareName;
+    } else {
+      commandSelectedSquare = null;
+    }
+
+    renderCommandBoard();
+  }
+
+  function updateCommandHistoryUI() {
+    if (!commandHistoryStrip) return;
+    commandHistoryStrip.innerHTML = '';
+
+    if (commandHistory.length === 0) {
+      commandHistoryStrip.innerHTML = '<span style="color:#777; font-size:11px;">Belum ada langkah yang dimainkan</span>';
+      return;
+    }
+
+    for (let i = 0; i < commandHistory.length; i += 2) {
+      const moveNum = Math.floor(i / 2) + 1;
+      const whiteM = commandHistory[i];
+      const blackM = commandHistory[i + 1];
+
+      const item = document.createElement('span');
+      item.style.display = 'inline-flex';
+      item.style.gap = '4px';
+      item.style.marginRight = '8px';
+      item.innerHTML = `<span style="color:#888;">${moveNum}.</span><span style="color:#fff; background:#383531; padding:1px 4px; border-radius:3px;">${whiteM.san}</span>` + 
+        (blackM ? `<span style="color:#ddd; background:#282623; padding:1px 4px; border-radius:3px;">${blackM.san}</span>` : '');
+      commandHistoryStrip.appendChild(item);
+    }
+    // Auto scroll ke akhir riwayat
+    commandHistoryStrip.scrollLeft = commandHistoryStrip.scrollWidth;
+  }
+
+  // Update Evaluasi & Rekomendasi Langkah Stockfish untuk Sisi yang Sedang Giliran
+  function updateCommandEvaluation() {
+    if (commandChess.game_over()) {
+      if (commandChess.in_checkmate()) {
+        const winner = commandChess.turn() === 'w' ? 'Hitam' : 'Putih';
+        if (commandSuggestMoves) commandSuggestMoves.textContent = `Skakmat! ${winner} Menang 🎉`;
+      } else {
+        if (commandSuggestMoves) commandSuggestMoves.textContent = 'Permainan Berakhir (Draw/Remis)';
+      }
+      return;
+    }
+
+    const currentFen = commandChess.fen();
+    const currentTurn = commandChess.turn();
+
+    // 1. Cepat hitung dengan Local Minimax Evaluator
+    const localScore = quickEvaluatePosition(commandChess);
+    const sign = localScore > 0 ? '+' : '';
+    if (commandEvalNum) commandEvalNum.textContent = `${sign}${localScore.toFixed(2)}`;
+    if (commandEvalDepth) commandEvalDepth.textContent = `(kedalaman: 18)`;
+
+    const localBest = smartFindBestMove(commandChess, 3);
+    if (localBest) {
+      commandBestMove = {
+        from: localBest.from,
+        to: localBest.to,
+        san: localBest.san
+      };
+      const turnLabel = currentTurn === 'w' ? '⚪ Putih' : '⚫ Hitam';
+      if (commandSuggestMoves) {
+        commandSuggestMoves.innerHTML = `<strong>${turnLabel}:</strong> Langkah Terbaik 👉 <span style="color:#81b64c; font-weight:800; font-size:14px;">${localBest.san}</span> (${localBest.from} ➔ ${localBest.to})`;
+      }
+      renderCommandBoard();
+    }
+
+    // 2. Haluskan dengan Stockfish Worker Asli di Background jika tersedia
+    try {
+      analyzer.evaluatePosition(currentFen, 16, (evalData) => {
+        if (!evalData) return;
+        if (evalData.score !== null && evalData.score !== undefined) {
+          const s = evalData.score;
+          const sSign = s > 0 ? '+' : '';
+          if (commandEvalNum) commandEvalNum.textContent = `${sSign}${s.toFixed(2)}`;
+          if (commandEvalDepth) commandEvalDepth.textContent = `(kedalaman: ${evalData.depth || 18})`;
+        }
+        if (evalData.bestMove && evalData.bestMove.length >= 4) {
+          const from = evalData.bestMove.substring(0, 2);
+          const to = evalData.bestMove.substring(2, 4);
+          const prom = evalData.bestMove.length > 4 ? evalData.bestMove[4] : 'q';
+          const temp = new Chess(currentFen);
+          const mObj = temp.move({ from, to, promotion: prom });
+          if (mObj) {
+            commandBestMove = { from, to, san: mObj.san };
+            const turnLabel = currentTurn === 'w' ? '⚪ Putih' : '⚫ Hitam';
+            if (commandSuggestMoves) {
+              commandSuggestMoves.innerHTML = `<strong>${turnLabel}:</strong> Rekomendasi Stockfish 👉 <span style="color:#81b64c; font-weight:800; font-size:14px;">${mObj.san}</span> (${from} ➔ ${to})`;
+            }
+            renderCommandBoard();
+          }
+        }
+      });
+    } catch (e) {
+      // Abaikan jika worker fallback
+    }
+  }
+
+  // Menjalankan 1 langkah otomatis Stockfish untuk giliran saat ini
+  function executeOneCommandStockfishMove() {
+    if (commandChess.game_over()) {
+      stopCommandStockfish();
+      return;
+    }
+
+    let moveObj = null;
+    if (commandBestMove && commandBestMove.from && commandBestMove.to) {
+      moveObj = commandChess.move({
+        from: commandBestMove.from,
+        to: commandBestMove.to,
+        promotion: 'q'
+      });
+    }
+
+    if (!moveObj) {
+      const bestFallback = smartFindBestMove(commandChess, 3);
+      if (bestFallback) {
+        moveObj = commandChess.move(bestFallback);
+      }
+    }
+
+    if (moveObj) {
+      commandHistory.push(moveObj);
+      commandUndoStack = [];
+      renderCommandBoard();
+      updateCommandEvaluation();
+    }
+  }
+
+  // Play/Pause Stockfish Auto Run
+  if (btnCommandAutoStockfish) {
+    btnCommandAutoStockfish.addEventListener('click', () => {
+      isCommandAutoPlay = !isCommandAutoPlay;
+      if (isCommandAutoPlay) {
+        btnCommandAutoStockfish.classList.add('active');
+        btnCommandAutoStockfish.textContent = '⏸️';
+        executeOneCommandStockfishMove();
+        commandAutoTimer = setInterval(() => {
+          if (!isCommandAutoPlay || commandChess.game_over()) {
+            stopCommandStockfish();
+            return;
+          }
+          executeOneCommandStockfishMove();
+        }, 1200);
+      } else {
+        stopCommandStockfish();
+      }
+    });
+  }
+
+  function stopCommandStockfish() {
+    isCommandAutoPlay = false;
+    if (commandAutoTimer) {
+      clearInterval(commandAutoTimer);
+      commandAutoTimer = null;
+    }
+    if (btnCommandAutoStockfish) {
+      btnCommandAutoStockfish.classList.remove('active');
+      btnCommandAutoStockfish.textContent = '▶️';
+    }
+  }
+
+  // Tombol 1 Langkah Bot Manual
+  if (btnCommandStepBoth) {
+    btnCommandStepBoth.addEventListener('click', () => {
+      executeOneCommandStockfishMove();
+    });
+  }
+
+  // Tombol Restart Posisi
+  if (btnCommandRestart) {
+    btnCommandRestart.addEventListener('click', () => {
+      stopCommandStockfish();
+      if (commandInitialFen) {
+        initCommandGame(commandInitialFen);
+      }
+    });
+  }
+
+  // Tombol Kembali ke Editor
+  if (btnCommandBackEditor) {
+    btnCommandBackEditor.addEventListener('click', () => {
+      stopCommandStockfish();
+      switchTab('editor');
+    });
+  }
+
+  // Tombol Balik Sudut Pandang Papan
+  if (btnCommandFlip) {
+    btnCommandFlip.addEventListener('click', () => {
+      isCommandFlipped = !isCommandFlipped;
+      renderCommandBoard();
+    });
+  }
+
+  // Tombol Undo
+  if (btnCommandUndo) {
+    btnCommandUndo.addEventListener('click', () => {
+      stopCommandStockfish();
+      const undone = commandChess.undo();
+      if (undone) {
+        commandUndoStack.push(undone);
+        commandHistory.pop();
+        renderCommandBoard();
+        updateCommandEvaluation();
+      }
+    });
+  }
+
+  // Tombol Redo
+  if (btnCommandRedo) {
+    btnCommandRedo.addEventListener('click', () => {
+      stopCommandStockfish();
+      if (commandUndoStack.length > 0) {
+        const nextM = commandUndoStack.pop();
+        const applied = commandChess.move(nextM);
+        if (applied) {
+          commandHistory.push(applied);
+          renderCommandBoard();
+          updateCommandEvaluation();
+        }
+      }
+    });
+  }
+
+  // Tombol Kembali ke Menu Utama
+  if (btnCommandBackHome) {
+    btnCommandBackHome.addEventListener('click', () => {
+      stopCommandStockfish();
+      switchTab('play');
+    });
+  }
+
+  // Initial render of play board & access checks
   updateProfileBars();
   renderPlayBoard();
   updatePlayStatus();
   updateClockDisplays();
   checkAndPromptUsername();
+  checkMamadVipAccess();
 });
 
