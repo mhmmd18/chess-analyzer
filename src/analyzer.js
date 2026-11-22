@@ -13,22 +13,47 @@ class StockfishAnalyzer {
 
   init() {
     try {
+      // Prioritaskan Stockfish 19 terbaru jika didukung
       const workerPath = (typeof window !== 'undefined' && window.location.pathname.includes('/src/'))
-        ? '../lib/stockfish.js'
-        : 'lib/stockfish.js';
+        ? '../lib/stockfish-19.js'
+        : 'lib/stockfish-19.js';
 
       this.worker = new Worker(workerPath);
       this.worker.onmessage = (event) => {
         this.handleMessage(event.data);
       };
+      this.worker.onerror = (err) => {
+        console.warn("Stockfish 19 worker failed, falling back to Stockfish 16:", err);
+        this.fallbackToStockfish16();
+      };
 
       this.sendCommand('uci');
       this.sendCommand('setoption name Skill Level value 20'); // Maksimal Grandmaster
-      this.sendCommand('setoption name Threads value 2');
+      this.sendCommand('setoption name Threads value 1');
       this.sendCommand('setoption name Hash value 32');
       this.sendCommand('isready');
     } catch (e) {
-      console.warn("Stockfish worker initialization error:", e);
+      console.warn("Stockfish 19 initialization error, falling back to Stockfish 16:", e);
+      this.fallbackToStockfish16();
+    }
+  }
+
+  fallbackToStockfish16() {
+    try {
+      const fallbackPath = (typeof window !== 'undefined' && window.location.pathname.includes('/src/'))
+        ? '../lib/stockfish.js'
+        : 'lib/stockfish.js';
+      this.worker = new Worker(fallbackPath);
+      this.worker.onmessage = (event) => {
+        this.handleMessage(event.data);
+      };
+      this.sendCommand('uci');
+      this.sendCommand('setoption name Skill Level value 20');
+      this.sendCommand('setoption name Threads value 2');
+      this.sendCommand('setoption name Hash value 32');
+      this.sendCommand('isready');
+    } catch (err) {
+      console.warn("Stockfish fallback failed:", err);
     }
   }
 
