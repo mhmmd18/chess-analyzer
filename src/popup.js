@@ -2635,11 +2635,7 @@ document.addEventListener('DOMContentLoaded', () => {
     commandUndoStack = [];
     commandSelectedSquare = null;
     isCommandFlipped = false; // POV Anda yang bawah (Putih di bawah secara default)
-    isCommandAutoPlay = false;
-    if (btnCommandAutoStockfish) {
-      btnCommandAutoStockfish.classList.remove('active');
-      btnCommandAutoStockfish.textContent = '▶️';
-    }
+    stopCommandStockfish(); // Pastikan tidak jalan otomatis sendiri saat pertama dibuka
     renderCommandBoard();
     updateCommandEvaluation();
   }

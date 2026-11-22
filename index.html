@@ -11,7 +11,7 @@
     :root {
       /* Board responsif desktop: muat 100vh tanpa scroll sama sekali */
       --board-size: min(calc(100vh - 150px), calc(100vw - 420px), 680px);
-      --editor-board-size: min(calc(100vh - 360px), 520px);
+      --editor-board-size: var(--board-size); /* Ukuran papan editor disamakan besar dengan board play bot */
       --square-size: calc(var(--board-size) / 8);
     }
 
@@ -609,10 +609,10 @@
     .editor-rules-panel {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 12px;
       width: 100%;
       background: #181714;
-      padding: 10px 12px;
+      padding: 12px 14px;
       border-radius: 6px;
       border: 1px solid #2d2b27;
       box-sizing: border-box;
@@ -622,7 +622,7 @@
       display: flex;
       flex-direction: column;
       align-items: flex-start;
-      gap: 6px;
+      gap: 8px;
       width: 100%;
     }
 
@@ -636,16 +636,18 @@
 
     .turn-options-container {
       display: flex;
-      align-items: center;
-      gap: 16px;
+      flex-direction: column; /* MENURUN KE BAWAH */
+      align-items: flex-start;
+      gap: 8px;
+      width: 100%;
     }
 
     .turn-radio-label {
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      color: #e0e0e0;
+      gap: 8px;
+      color: #f0f0f0;
       font-weight: 700;
       font-size: 13px;
     }
@@ -660,12 +662,12 @@
     .castling-teams-container {
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 8px;
       width: 100%;
     }
 
     .castling-group {
-      display: inline-flex;
+      display: flex;
       align-items: center;
       gap: 12px;
       color: #ccc;
@@ -675,7 +677,8 @@
     .castling-team-label {
       font-size: 13px;
       font-weight: 700;
-      min-width: 65px;
+      min-width: 55px;
+      color: #bbb;
     }
 
     .castling-group label {
@@ -1323,9 +1326,9 @@
       </div>
     </div>
 
-    <!-- TAB EDITOR PAPAN / PINDAI (Gambar 2 Chessis) -->
-    <div class="tab-content" id="tab-content-editor" style="overflow-y: auto;">
-      <div class="analyzer-container" style="justify-content: center; height: auto; min-height: 100%; overflow: visible;">
+    /* TAB EDITOR PAPAN / PINDAI (Gambar 2 Chessis) */
+    <div class="tab-content" id="tab-content-editor" style="overflow-y: auto; overflow-x: hidden; height: auto; min-height: 100%; -webkit-overflow-scrolling: touch;">
+      <div class="analyzer-container" style="justify-content: center; height: auto; min-height: 100%; overflow: visible; align-items: flex-start; padding: 10px 0 60px 0;">
         <div class="board-column editor-column">
           
           <!-- Top Controls Bar: Reset, Hapus, Giliran Jalan, Rokade Standar (Bikin menurun/vertikal rapi) -->
@@ -1348,11 +1351,11 @@
                 <div class="turn-options-container">
                   <label class="turn-radio-label">
                     <input type="radio" name="editor-turn" value="w" id="editor-turn-white" checked>
-                    <span>⚪ Putih</span>
+                    <span>Putih</span>
                   </label>
                   <label class="turn-radio-label">
                     <input type="radio" name="editor-turn" value="b" id="editor-turn-black">
-                    <span>⚫ Hitam</span>
+                    <span>Hitam</span>
                   </label>
                 </div>
               </div>
@@ -1362,12 +1365,12 @@
                 <span class="editor-rule-label">Aturan Rokade:</span>
                 <div class="castling-teams-container">
                   <div class="castling-group">
-                    <span class="castling-team-label">⚪ Putih:</span>
+                    <span class="castling-team-label">Putih:</span>
                     <label><input type="checkbox" id="castling-wk" checked> O-O (Pendek)</label>
                     <label><input type="checkbox" id="castling-wq" checked> O-O-O (Panjang)</label>
                   </div>
                   <div class="castling-group">
-                    <span class="castling-team-label">⚫ Hitam:</span>
+                    <span class="castling-team-label">Hitam:</span>
                     <label><input type="checkbox" id="castling-bk" checked> O-O (Pendek)</label>
                     <label><input type="checkbox" id="castling-bq" checked> O-O-O (Panjang)</label>
                   </div>
@@ -1433,9 +1436,9 @@
       </div>
     </div>
 
-    <!-- TAB COMMAND BOARD (Gambar 3 - Bot Stockfish POV Bawah, Rekomendasi Langkah Kedua Pihak) -->
-    <div class="tab-content" id="tab-content-command" style="overflow-y: auto;">
-      <div class="analyzer-container" style="justify-content: center; height: auto; min-height: 100%; overflow: visible;">
+    /* TAB COMMAND BOARD (Gambar 3 - Bot Stockfish POV Bawah, Rekomendasi Langkah Kedua Pihak) */
+    <div class="tab-content" id="tab-content-command" style="overflow-y: auto; overflow-x: hidden; height: auto; min-height: 100%; -webkit-overflow-scrolling: touch;">
+      <div class="analyzer-container" style="justify-content: center; height: auto; min-height: 100%; overflow: visible; align-items: flex-start; padding: 10px 0 60px 0;">
         <div class="board-column command-column" style="height: auto; overflow: visible; padding-bottom: 24px;">
           
           <!-- Command Header: Pembukaan / Evaluasi Catur Realtime -->
